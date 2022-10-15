@@ -15,10 +15,10 @@ do
     if [ -d "$ruta" ] #...diferencio si es un archivo regular o un directorio. En el caso del segundo hago recursividad (llamando a la func.) hasta que sea un archivo
         then
             Principal "$i"
-            echo "$i"
+            echo "D- $i"
         elif [ -f "$ruta" ]
         then
-            let "sumanol += $(wc -l < "$ruta")" #cuando sea un archivo sumo a la variable global el resultado de la instrucción que muestra el numero de lineas de un archivo
+            echo "F $i"
         fi
     done
 }
