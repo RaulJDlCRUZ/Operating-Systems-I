@@ -18,5 +18,5 @@ then
     echo "Error. Utilización: $0 [opciones] [camino1,camino2...]"º
     exit 1
 else
-    Principal $1 $2 #y si sí, llamo a la función
+    Principal $1 $2 #y si sí, llamo a la función principal
 fi
