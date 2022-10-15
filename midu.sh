@@ -10,13 +10,23 @@
 
 function Principal()
 {
-    echo "Hi"
+for i in $1/*
+do
+    if [ -d "$ruta" ] #...diferencio si es un archivo regular o un directorio. En el caso del segundo hago recursividad (llamando a la func.) hasta que sea un archivo
+        then
+            Principal "$i"
+            echo "$i"
+        elif [ -f "$ruta" ]
+        then
+            let "sumanol += $(wc -l < "$ruta")" #cuando sea un archivo sumo a la variable global el resultado de la instrucción que muestra el numero de lineas de un archivo
+        fi
+    done
 }
 
-if [ $# -lt 1 ] || [ $# -gt 2 ] #Si el numero de parametros no está entre 1 y 2
+if [ $# -lt 1 ] || [ $# -gt 4 ] #Si el numero de parametros no está entre 1 y 4 ( -d -S --exclude [camino] )
 then
-    echo "Error. Utilización: $0 [opciones] [camino1,camino2...]"º
+    echo "Error. Utilización: $0 [opciones] [camino1,camino2...]"
     exit 1
 else
-    Principal $1 $2 #y si sí, llamo a la función principal
+    Principal $1 $2 $3 $4 #y si sí, llamo a la función principal
 fi
