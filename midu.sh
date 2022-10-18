@@ -8,21 +8,16 @@
 #https://learn.microsoft.com/en-us/azure/developer/javascript/how-to/with-visual-studio-code/clone-github-repository?tabs=create-repo-command-palette%2Cinitialize-repo-activity-bar%2Ccreate-branch-command-palette%2Ccommit-changes-command-palette%2Cpush-command-palette
 #https://git-scm.com/book/es/v2/Fundamentos-de-Git-Guardando-cambios-en-el-Repositorio
 
-function Principal()
+function Principal() #Recogida y tratamiento de parámetros
 {
-for i in $1/*
-do
-    if [ -d "$ruta" ] #...diferencio si es un archivo regular o un directorio. En el caso del segundo hago recursividad (llamando a la func.) hasta que sea un archivo
-        then
-            Principal "$i"
-            echo "D- $i"
-        elif [ -f "$ruta" ]
-        then
-            echo "F $i"
-        fi
-    done
+
 }
 
-function ComputoSize(){
+function Salir() #El programa sale (-1) en caso de error
+{
+
+} 
+
+function ComputoSize(){ #Aquí se calcula el tamaño del caminoX
     echo "Computo Tamaño TU Zorra"
 }
