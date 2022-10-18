@@ -23,10 +23,6 @@ do
     done
 }
 
-if [ $# -lt 1 ] || [ $# -gt 4 ] #Si el numero de parametros no está entre 1 y 4 ( -d -S --exclude [camino] )
-then
-    echo "Error. Utilización: $0 [opciones] [camino1,camino2...]"
-    exit 1
-else
-    Principal $1 $2 $3 $4 #y si sí, llamo a la función principal
-fi
+function ComputoSize(){
+    echo "Computo Tamaño"
+}
