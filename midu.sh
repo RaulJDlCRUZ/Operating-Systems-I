@@ -24,5 +24,5 @@ do
 }
 
 function ComputoSize(){
-    echo "Computo Tamaño"
+    echo "Computo Tamaño TU ABUELA"
 }
