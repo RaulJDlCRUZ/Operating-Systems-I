@@ -78,7 +78,7 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
     if [ -f $camino ]; then
     #######################Si el camino es un ARCHIVO REGULAR (la unica opcion a tener en cuentra es --exclude)
         #Se calcula tam (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
-        tam_parcial=$aux
+        tam_parcial=$temp
     fi
 
     if [ -d $camino ]; then
@@ -89,9 +89,9 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                 #Guardar valor de tam_parcial en variable local (e.j.: temp 
                 temp=$tam_parcial
                 tam_parcial=0 #Resetear antes de la llamada a funcion recursiva
-                    ComputoTam $option_d $option_s $option_excl $nodo #Llamada a función
-                        #Imprimir $tam_parcial
-                tam_parcial <- $(expr $tam_parcial + $temp) #se recupera/restaura el valor anterior de tam_parcial y se acumula con lo obtenido en la llamada recuc
+                ComputoTam $OPTION_D $OPTION_S $OPTION_EXCL $nodo #Llamada a función
+                           #Imprimir $tam_parcial
+                tam_parcial=$(expr $tam_parcial + $temp) #se recupera/restaura el valor anterior de tam_parcial y se acumula con lo obtenido en la llamada recuc
             elif [ -f $nodo ]; then #Si archivo regular
                 tam_archivo <- # Calculado con wc- c
                 tam_parcial=$(expr $tam_parcial + $tamArchivo) #Acumulamos
