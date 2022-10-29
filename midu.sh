@@ -1,4 +1,47 @@
 #!/bin/bash
+
+function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
+    local option_d=$1; local option_s=$2; local option_excl=$3; local camino=$4
+    #Se guardan las opciones en variables locales
+    if [ $option_excl != -1 ]; then
+        matching=$(echo $camino | rev | cut -d"/" -f1 | rev)
+        matching=$(echo $matching | egrep -e $option_excl)
+    fi
+
+    if [ ! $matching ]; then
+        if [ -f $camino ]; then                        #Si el camino es un arhivo regular la unica opcion a tener en cuentra es --exclude
+        aux=$(wc -c < "$camino") #Se calcula tamanyo (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
+        tam_parcial=$aux
+        fi
+        if [ -d $camino ]; then #Si el camino es un directorio
+            local nodo
+            for nodo in $camino/*; do
+                if [ -d $nodo ]; then #Si directorio
+                    #Guardar valor de tam_parcial en variable local (e.j.: temp 
+                    temp=$tam_parcial
+                    tam_parcial=0 #Resetear antes de la llamada a funcion recursiva
+                    if [ $option_d == "-1" ]; then
+                        ComputoTam $option_d $option_s $option_excl $nodo #Llamada a función de manera normal
+                    else
+
+                    #Imprimir $tam_parcial
+                    tam_parcial=$(expr $tam_parcial + $temp) #se recupera/restaura el valor anterior de tam_parcial y se acumula con lo obtenido en la llamada recuc
+                    fi
+                elif [ -f $nodo ]; then #Si archivo regular
+                    tam_archivo=$(wc -c < "$nodo")
+                    tam_parcial=$(expr $tam_parcial + $tam_archivo) #Acumulamos
+                fi
+            done
+        fi
+    fi
+}
+
+function Salir() #El programa sale (-1) en caso de error
+{
+    echo "ABORTANDO EJECUCIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]"
+    exit 1
+} 
+
 shopt -s dotglob #recuperar nodos ocultos
 tam_parcial=0    #Variable 
 
@@ -54,7 +97,7 @@ for i in $@; do
     esac
     CONTADOR=$(expr $CONTADOR + 1)
 done
-#####################################################################
+#---------------------------------------------------------------------------------
 if [ ! $CAMINOS ]; then # Tratar cuando no se especifica un camino (".")
     ComputoTam $OPTION_D $OPTION_S $OPTION_EXCL "."
     # acciones con el tamanyo..
@@ -64,45 +107,3 @@ else
         # acciones con el tamanyo..
     done
 fi
-
-function Salir() #El programa sale (-1) en caso de error
-{
-    echo "ABORTANDO EJECUCIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]"
-    exit 1
-} 
-
-function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
-    local option_d=$1; local option_s=$2; local option_excl=$3; local camino=$4
-    #Se guardan las opciones en variables locales
-    if [ $option_excl != -1 ]; then
-        matching=$(echo $camino | rev | cut -d"/" -f1 | rev)
-        matching=$(echo $matching | egrep -e $option_excl)
-    fi
-
-    if [ ! $matching ]; then
-        if [ -f $camino ]; then                        #Si el camino es un arhivo regular la unica opcion a tener en cuentra es --exclude
-        aux=$(wc -c < "$camino") #Se calcula tamanyo (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
-        tam_parcial=$aux
-        fi
-        if [ -d $camino ]; then #Si el camino es un directorio
-            local nodo
-            for nodo in $camino/*; do
-                if [ -d $nodo ]; then #Si directorio
-                    #Guardar valor de tam_parcial en variable local (e.j.: temp 
-                    temp=$tam_parcial
-                    tam_parcial=0 #Resetear antes de la llamada a funcion recursiva
-                    if [ $option_d == "-1" ]; then
-                        ComputoTam $option_d $option_s $option_excl $nodo #Llamada a función de manera normal
-                    else
-
-                    #Imprimir $tam_parcial
-                    tam_parcial=$(expr $tam_parcial + $temp) #se recupera/restaura el valor anterior de tam_parcial y se acumula con lo obtenido en la llamada recuc
-                    fi
-                elif [ -f $nodo ]; then #Si archivo regular
-                    tam_archivo=$(wc -c < "$nodo")
-                    tam_parcial=$(expr $tam_parcial + $tam_archivo) #Acumulamos
-                fi
-            done
-        fi
-    fi
-}
