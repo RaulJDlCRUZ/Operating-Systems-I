@@ -56,11 +56,11 @@ for i in $@; do
 done
 #####################################################################
 if [ ! $CAMINOS ]; then # Tratar cuando no se especifica un camino (".")
-    computingSize $OPTION_D $OPTION_S $OPTION_EXCL "."
+    ComputoTam $OPTION_D $OPTION_S $OPTION_EXCL "."
     # acciones con el tamanyo..
 else
     for i in "${CAMINOS[@]}"; do
-        computingSize $OPTION_D $OPTION_S $OPTION_EXCL $i
+        ComputoTam $OPTION_D $OPTION_S $OPTION_EXCL $i
         # acciones con el tamanyo..
     done
 fi
