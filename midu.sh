@@ -74,14 +74,14 @@ function Salir() #El programa sale (-1) en caso de error
 function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
     local option_d=$1; local option_s=$2; local option_excl=$3; local camino=$4
     #Se guardan las opciones en variables locales
-    if [ $option_excl != -9999]; then
+    if [ $option_excl != -1 ]; then
         matching=$(echo $camino | rev | cut -d"/" -f1 | rev)
         matching=$(echo $matching | egrep -e $option_excl)
     fi
 
     if [ ! $matching ]; then
         if [ -f $camino ]; then                        #Si el camino es un arhivo regular la unica opcion a tener en cuentra es --exclude
-        aux=$(wc -c < "$camino")#Se calcula tamanyo (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
+        aux=$(wc -c < "$camino") #Se calcula tamanyo (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
         tam_parcial=$aux
         fi
         if [ -d $camino ]; then #Si el camino es un directorio
@@ -91,14 +91,16 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                     #Guardar valor de tam_parcial en variable local (e.j.: temp 
                     temp=$tam_parcial
                     tam_parcial=0 #Resetear antes de la llamada a funcion recursiva
-                    if [ $option_d == "-9999" ]; then
-                        computingSize $option_d $option_s $option_excl $nodo #Llamada a función
+                    if [ $option_d == "-1" ]; then
+                        ComputoTam $option_d $option_s $option_excl $nodo #Llamada a función de manera normal
                     else
+
                     #Imprimir $tam_parcial
                     tam_parcial=$(expr $tam_parcial + $temp) #se recupera/restaura el valor anterior de tam_parcial y se acumula con lo obtenido en la llamada recuc
+                    fi
                 elif [ -f $nodo ]; then #Si archivo regular
                     tam_archivo=$(wc -c < "$nodo")
-                    tam_parcial=$(expr $tam_parcial + $tamArchivo) #Acumulamos
+                    tam_parcial=$(expr $tam_parcial + $tam_archivo) #Acumulamos
                 fi
             done
         fi
