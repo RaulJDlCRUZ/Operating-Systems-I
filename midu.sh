@@ -22,8 +22,13 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                     tam_parcial=0 #Resetear antes de la llamada a funcion recursiva
                     if [ $option_d == "-1" ]; then
                         ComputoTam $option_d $option_s $option_excl $nodo #Llamada a función de manera normal
+                    else
+                        while [ j \< $OPTION_D ]
+                        do
+                            ComputoTam $j $option_s $option_excl $nodo
+                            j+="1"
+                        done
                     fi
-
                     #Imprimir $tam_parcial
                     tam_parcial=$(expr $tam_parcial + $temp) #se recupera/restaura el valor anterior de tam_parcial y se acumula con lo obtenido en la llamada recuc
                     echo "$tam_parcial $nodo"
@@ -38,7 +43,7 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
     fi
 }
 
-function Salir() #El programa sale (-1) en caso de error
+function mostrarError() #El programa sale (-1) en caso de error
 {
     echo "ABORTANDO EJECUCIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]"
     exit 1
@@ -46,15 +51,6 @@ function Salir() #El programa sale (-1) en caso de error
 
 #shopt -s dotglob #recuperar nodos ocultos
 tam_parcial=0    #Variable 
-
-
-#Si estás leyendo esto quiere decir que el git funciona desde VSCODE - Manjaro
-#he tenido que hacer git config --global pull.rebase false
-
-#https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
-#https://www.jcchouinard.com/install-git-in-vscode/#enable-git
-#https://learn.microsoft.com/en-us/azure/developer/javascript/how-to/with-visual-studio-code/clone-github-repository?tabs=create-repo-command-palette%2Cinitialize-repo-activity-bar%2Ccreate-branch-command-palette%2Ccommit-changes-command-palette%2Cpush-command-palette
-#https://git-scm.com/book/es/v2/Fundamentos-de-Git-Guardando-cambios-en-el-Repositorio
 
 ##################Comprobacion de errores#####################
 OPTION=""
@@ -109,3 +105,11 @@ else
         # acciones con el tamanyo..
     done
 fi
+
+#Si estás leyendo esto quiere decir que el git funciona desde VSCODE - Manjaro
+#he tenido que hacer git config --global pull.rebase false
+
+#https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
+#https://www.jcchouinard.com/install-git-in-vscode/#enable-git
+#https://learn.microsoft.com/en-us/azure/developer/javascript/how-to/with-visual-studio-code/clone-github-repository?tabs=create-repo-command-palette%2Cinitialize-repo-activity-bar%2Ccreate-branch-command-palette%2Ccommit-changes-command-palette%2Cpush-command-palette
+#https://git-scm.com/book/es/v2/Fundamentos-de-Git-Guardando-cambios-en-el-Repositorio
