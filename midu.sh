@@ -22,14 +22,16 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                     tam_parcial=0 #Resetear antes de la llamada a funcion recursiva
                     if [ $option_d == "-1" ]; then
                         ComputoTam $option_d $option_s $option_excl $nodo #Llamada a función de manera normal
-                    else
+                    fi
 
                     #Imprimir $tam_parcial
                     tam_parcial=$(expr $tam_parcial + $temp) #se recupera/restaura el valor anterior de tam_parcial y se acumula con lo obtenido en la llamada recuc
-                    fi
+                    echo "$tam_parcial $nodo"
+                    
                 elif [ -f $nodo ]; then #Si archivo regular
                     tam_archivo=$(wc -c < "$nodo")
                     tam_parcial=$(expr $tam_parcial + $tam_archivo) #Acumulamos
+                    echo "$tam_archivo $nodo"
                 fi
             done
         fi
@@ -42,7 +44,7 @@ function Salir() #El programa sale (-1) en caso de error
     exit 1
 } 
 
-shopt -s dotglob #recuperar nodos ocultos
+#shopt -s dotglob #recuperar nodos ocultos
 tam_parcial=0    #Variable 
 
 
