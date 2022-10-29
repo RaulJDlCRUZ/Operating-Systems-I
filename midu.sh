@@ -1,4 +1,6 @@
 #!/bin/bash
+shopt -s dotglob #recuperar nodos ocultos
+tam_total=0    #Variable
 
 function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
     local option_d=$1; local option_s=$2; local option_excl=$3; local camino=$4
@@ -11,32 +13,33 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
     if [ ! $matching ]; then
         if [ -f $camino ]; then                        #Si el camino es un arhivo regular la unica opcion a tener en cuentra es --exclude
         aux=$(wc -c < "$camino") #Se calcula tamanyo (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
-        tam_parcial=$aux
+        tam_total=$aux
         fi
         if [ -d $camino ]; then #Si el camino es un directorio
             local nodo
             for nodo in $camino/*; do
                 if [ -d $nodo ]; then #Si directorio
-                    #Guardar valor de tam_parcial en variable local (e.j.: temp 
-                    temp=$tam_parcial
-                    tam_parcial=0 #Resetear antes de la llamada a funcion recursiva
+                    #Guardar valor de tam_total en variable local (e.j.: temp 
+                    temp=$tam_total
+                    tam_total=0 #Resetear antes de la llamada a funcion recursiva
                     if [ $option_d == "-1" ]; then
                         ComputoTam $option_d $option_s $option_excl $nodo #Llamada a función de manera normal
                     else
-                        while [ j \< $OPTION_D ]
+                        j=0
+                        while [ $j -lt $OPTION_D ]
                         do
                             ComputoTam $j $option_s $option_excl $nodo
-                            j+="1"
+                            let j=$j+1
                         done
                     fi
-                    #Imprimir $tam_parcial
-                    tam_parcial=$(expr $tam_parcial + $temp) #se recupera/restaura el valor anterior de tam_parcial y se acumula con lo obtenido en la llamada recuc
-                    echo "$tam_parcial $nodo"
+                    #Imprimir $tam_total
+                    tam_total=$(expr $tam_total + $temp) #se recupera/restaura el valor anterior de tam_total y se acumula con lo obtenido en la llamada recuc
+                    echo "$tam_total $nodo"
                     
                 elif [ -f $nodo ]; then #Si archivo regular
                     tam_archivo=$(wc -c < "$nodo")
-                    tam_parcial=$(expr $tam_parcial + $tam_archivo) #Acumulamos
-                    echo "$tam_archivo $nodo"
+                    tam_total=$(expr $tam_total + $tam_archivo) #Acumulamos
+                    #echo "NO - - - - - $tam_archivo $nodo"
                 fi
             done
         fi
@@ -48,9 +51,6 @@ function mostrarError() #El programa sale (-1) en caso de error
     echo "ABORTANDO EJECUCIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]"
     exit 1
 } 
-
-#shopt -s dotglob #recuperar nodos ocultos
-tam_parcial=0    #Variable 
 
 ##################Comprobacion de errores#####################
 OPTION=""
