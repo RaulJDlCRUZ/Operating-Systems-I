@@ -7,7 +7,7 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
     #Se guardan las opciones en variables locales
     if [ $option_excl != -1 ]; then
         matching=$(echo $camino | rev | cut -d"/" -f1 | rev)
-        matching=$(echo $matching | egrep -e $option_excl)
+        matching=$(echo $matching | egrep -e $option_excl) #grep -E
     fi
 
     if [ ! $matching ]; then
