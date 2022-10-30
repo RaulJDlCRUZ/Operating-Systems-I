@@ -56,10 +56,10 @@ function mostrarError() #El programa sale (-1) en caso de error
 ##################Comprobacion de errores#####################
 OPTION=""
 CONTADOR=1 #Se empieza en el arg 1
-OPTION_D=-1; OPTION_S=-1; OPTION_EXCL=-1 #Para que las variables con las opciones -d -s y --exclude se pasen siempre como param de la funcion
+OPTION_D=-1; OPTION_S=-1; OPTION_EXCL=-1 #Para que las variables con las opciones -d -S y --exclude se pasen siempre como param de la funcion
 for i in $@; do
     case $i in
-    "-s" | "-d" | "--exclude")
+    "-S" | "-d" | "--exclude")
         if [ $CAMINOS ]; then #Error si ya se ha recogido antes uno o más caminos
             mostrarError
         fi
@@ -70,8 +70,8 @@ for i in $@; do
             fi
             OPTION=$i
             ;;
-        "-s")
-            OPTION_S=1 #La opcion -s no tiene ningun parametro detras
+        "-S")
+            OPTION_S=1 #La opcion -S no tiene ningun parametro detras
             ;;
         esac
         ;;
