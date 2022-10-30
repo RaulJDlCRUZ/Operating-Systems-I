@@ -14,7 +14,7 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
         if [ -f $camino ]; then                        #Si el camino es un arhivo regular la unica opcion a tener en cuentra es --exclude
         aux=$(wc -c < "$camino") #Se calcula tamanyo (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
         tam_total=$aux
-        echo "$camino $tam_total"
+        echo "$tam_total $camino"
         fi
         if [ -d $camino ]; then #Si el camino es un directorio
             local nodo
@@ -35,7 +35,7 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                     fi
                     #Imprimir $tam_total
                     tam_total=$(expr $tam_total + $temp) #se recupera/restaura el valor anterior de tam_total y se acumula con lo obtenido en la llamada recuc
-                    echo "$tam_total $nodo"
+                    #echo "$tam_total $nodo"
                     
                 elif [ -f $nodo ]; then #Si archivo regular
                     tam_archivo=$(wc -c < "$nodo")
@@ -43,7 +43,7 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                     #echo "$tam_archivo $nodo"
                 fi
             done
-        echo "$tam_total $camino"
+            echo "$tam_total $camino"
         fi
     fi
 }
