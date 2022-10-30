@@ -105,6 +105,7 @@ else
     for i in "${CAMINOS[@]}"; do
         ComputoTam $OPTION_D $OPTION_S $OPTION_EXCL $i
         # acciones con el tamanyo..
+        echo "-----------------------------------------------------------------------------------"
         tam_total=0
     done
 fi
