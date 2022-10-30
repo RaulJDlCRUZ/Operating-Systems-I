@@ -40,9 +40,10 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                 elif [ -f $nodo ]; then #Si archivo regular
                     tam_archivo=$(wc -c < "$nodo")
                     tam_total=$(expr $tam_total + $tam_archivo) #Acumulamos
-                    #echo "NO - - - - - $tam_archivo $nodo"
+                    #echo "$tam_archivo $nodo"
                 fi
             done
+        echo "$tam_total $camino"
         fi
     fi
 }
