@@ -1,5 +1,5 @@
 #!/bin/bash
-#shopt -s dotglob #recuperar nodos ocultos
+shopt -s dotglob #recuperar nodos ocultos
 tam_total=0    #Variable
 
 function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
@@ -21,7 +21,7 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
             for nodo in $camino/*; do
                 if [ -d $nodo ]; then #Si directorio
                     #Guardar valor de tam_total en variable local (e.j.: temp 
-                    temp=$tam_total
+                    local temp=$tam_total
                     tam_total=0 #Resetear antes de la llamada a funcion recursiva
                     if [ $option_d == "-1" ]; then
                         ComputoTam $option_d $option_s $option_excl $nodo #Llamada a función de manera normal
@@ -53,7 +53,7 @@ function mostrarError() #El programa sale (-1) en caso de error
     echo "ABORTANDO EJECUCIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]"
     exit 1
 } 
-
+#set -x
 ##################Comprobacion de errores#####################
 OPTION=""
 CONTADOR=1 #Se empieza en el arg 1
@@ -107,7 +107,7 @@ else
         # acciones con el tamanyo..
     done
 fi
-
+#set +x
 #Si estás leyendo esto quiere decir que el git funciona desde VSCODE - Manjaro
 #he tenido que hacer git config --global pull.rebase false
 
