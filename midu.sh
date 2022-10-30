@@ -1,5 +1,5 @@
 #!/bin/bash
-shopt -s dotglob #recuperar nodos ocultos
+#shopt -s dotglob #recuperar nodos ocultos
 tam_total=0    #Variable
 
 function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
@@ -14,6 +14,7 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
         if [ -f $camino ]; then                        #Si el camino es un arhivo regular la unica opcion a tener en cuentra es --exclude
         aux=$(wc -c < "$camino") #Se calcula tamanyo (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
         tam_total=$aux
+        echo "$camino $tam_total"
         fi
         if [ -d $camino ]; then #Si el camino es un directorio
             local nodo
