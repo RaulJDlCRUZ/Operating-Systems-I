@@ -5,6 +5,7 @@ depth=0
 
 function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
     local option_d=$1; local option_s=$2; local option_excl=$3; local camino=$4
+
     #Se guardan las opciones en variables locales
     if [ $option_excl != -1 ]; then
         matching=$(echo $camino | rev | cut -d"/" -f1 | rev)
@@ -15,9 +16,11 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
         if [ -f $camino ]; then                        #Si el camino es un arhivo regular la unica opcion a tener en cuentra es --exclude
         aux=$(wc -c < "$camino") #Se calcula tamanyo (aux). Vale tambien con wc -c (tamanyo en bytes es valido), stat con opciones adecuadas o en KB con ls -s...
         tam_total=$aux
-        echo "$tam_total $camino"
         fi
         if [ -d $camino ]; then #Si el camino es un directorio
+            if [ $option_s != "-99" ]; then
+                option_d=0
+            fi
             local nodo
             for nodo in $camino/*; do
                 if [ -d $nodo ]; then #Si directorio
@@ -25,11 +28,10 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                     local temp=$tam_total
                     tam_total=0 #Resetear antes de la llamada a funcion recursiva
                     if [ $option_d == "-99" ]; then
-                        ComputoTam $option_d $option_s $option_excl $nodo
+                        ComputoTam $option_d $option_s $option_excl $nodo #llamada recursiva como si nada
                     else
                         ComputoTam $(expr $option_d - 1) $option_s $option_excl $nodo
                     fi
-
                     if [ $option_d == "-99" ] || [ $option_d -gt 0 ]; then
                         echo "$tam_total $nodo"
                     fi
