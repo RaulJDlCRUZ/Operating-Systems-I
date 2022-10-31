@@ -48,7 +48,7 @@ function mostrarError() #El programa sale (-1) en caso de error
     echo "ABORTANDO EJECUCIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]"
     exit 1
 } 
-set -x
+# set -x
 ##################Comprobacion de errores#####################
 OPTION=""
 CONTADOR=1 #Se empieza en el arg 1
@@ -104,7 +104,7 @@ else
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------"
     done
 fi
-set +x
+# set +x
 #Si estás leyendo esto quiere decir que el git funciona desde VSCODE - Manjaro
 #he tenido que hacer git config --global pull.rebase false
 
