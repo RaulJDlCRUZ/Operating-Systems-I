@@ -24,21 +24,22 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                     #Guardar valor de tam_total en variable local (e.j.: temp 
                     local temp=$tam_total
                     tam_total=0 #Resetear antes de la llamada a funcion recursiva
-                    let depth+=1
-                    if [ $depth -le $option_d ] || [ $option_d -lt 0 ]; then
+                    if [ $option_d == "-99" ]; then
                         ComputoTam $option_d $option_s $option_excl $nodo
-                        tam_total=$(expr $tam_total + $temp) #se recupera/restaura el valor anterior de tam_total y se acumula con lo obtenido de la llamada recursiva
+                    else
+                        ComputoTam $(expr $option_d - 1) $option_s $option_excl $nodo
                     fi
-                    let depth-=1
-                    #Imprimir $tam_total
-                    #echo "$tam_total $nodo"
+
+                    if [ $option_d == "-99" ] || [ $option_d -gt 0 ]; then
+                        echo "$tam_total $nodo"
+                    fi
+                    tam_total=$(expr $temp + $tam_total)
                 elif [ -f $nodo ]; then #Si archivo regular
                     tam_archivo=$(wc -c < "$nodo")
                     tam_total=$(expr $tam_total + $tam_archivo) #Acumulamos
                     #echo "$tam_archivo $nodo"
                 fi
             done
-            echo "$tam_total $camino"
         fi
     fi
 }
@@ -52,7 +53,7 @@ function mostrarError() #El programa sale (-1) en caso de error
 ##################Comprobacion de errores#####################
 OPTION=""
 CONTADOR=1 #Se empieza en el arg 1
-OPTION_D=-1 OPTION_S=-1; OPTION_EXCL=-1 #Para que las variables con las opciones -d -S y --exclude se pasen siempre como param de la funcion
+OPTION_D=-99; OPTION_S=-99; OPTION_EXCL=-1 #Para que las variables con las opciones -d -S y --exclude se pasen siempre como param de la funcion
 for i in $@; do
     case $i in
     "-S" | "-d" | "--exclude")
@@ -95,10 +96,12 @@ done
 #---------------------------------------------------------------------------------
 if [ ! $CAMINOS ]; then # Tratar cuando no se especifica un camino (".")
     ComputoTam $OPTION_D $OPTION_S $OPTION_EXCL "."
+    echo "$tam_total ."
     # acciones con el tamanyo..
 else
     for i in "${CAMINOS[@]}"; do
         ComputoTam $OPTION_D $OPTION_S $OPTION_EXCL $i
+        echo "$tam_total $i"
         # acciones con el tamanyo..
         tam_total=0
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------"
