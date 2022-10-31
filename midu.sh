@@ -56,7 +56,7 @@ CONTADOR=1 #Se empieza en el arg 1
 OPTION_D=-99; OPTION_S=-99; OPTION_EXCL=-1 #Para que las variables con las opciones -d -S y --exclude se pasen siempre como param de la funcion
 for i in $@; do
     case $i in
-    "-S" | "-d" | "--exclude")
+    "-s" | "-d" | "--exclude")
         if [ $CAMINOS ]; then #Error si ya se ha recogido antes uno o más caminos
             mostrarError
         fi
@@ -67,7 +67,7 @@ for i in $@; do
             fi
             OPTION=$i
             ;;
-        "-S")
+        "-s")
             OPTION_S=1 #La opcion -S no tiene ningun parametro detras
             ;;
         esac
