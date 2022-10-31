@@ -1,7 +1,6 @@
 #!/bin/bash
 shopt -s dotglob #recuperar nodos ocultos
 tam_total=0    #Variable
-depth=0
 
 function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
     local option_d=$1; local option_s=$2; local option_excl=$3; local camino=$4
@@ -39,7 +38,6 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                 elif [ -f $nodo ]; then #Si archivo regular
                     tam_archivo=$(wc -c < "$nodo")
                     tam_total=$(expr $tam_total + $tam_archivo) #Acumulamos
-                    #echo "$tam_archivo $nodo"
                 fi
             done
         fi
