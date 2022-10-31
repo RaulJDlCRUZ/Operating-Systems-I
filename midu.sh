@@ -92,6 +92,11 @@ for i in $@; do
         ;;
     esac
     CONTADOR=$(expr $CONTADOR + 1)
+    #NO ES COMPATIBLE UTILIZAR LA OPCION -s CON LA OPCION -d EN MIDU PORQUE --summarize UTILIZA ÚNICAMENTE EL NIVEL 0 PARA EL CÓMPUTO DEL TAMAÑO. CONSULTAR man du
+    if [ $OPTION_D != -99 ] && [ $OPTION_S != -99 ]; then
+        echo "La opción -s no es compatible con la opción -d"
+        mostrarError
+    fi
 done
 #---------------------------------------------------------------------------------
 if [ ! $CAMINOS ]; then # Tratar cuando no se especifica un camino (".")
