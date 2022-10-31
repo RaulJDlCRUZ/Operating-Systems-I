@@ -92,13 +92,14 @@ for i in $@; do
         ;;
     esac
     CONTADOR=$(expr $CONTADOR + 1)
-    #NO ES COMPATIBLE UTILIZAR LA OPCION -s CON LA OPCION -d EN MIDU PORQUE --summarize UTILIZA ÚNICAMENTE EL NIVEL 0 PARA EL CÓMPUTO DEL TAMAÑO. CONSULTAR man du
+    #NO ES COMPATIBLE UTILIZAR LA OPCION -s CON LA OPCION -d EN MIDU PORQUE --summarize
+    #UTILIZA ÚNICAMENTE EL NIVEL 0 PARA EL CÓMPUTO DEL TAMAÑO (ÚNICO ARGUMENTO). CONSULTAR man du
     if [ $OPTION_D != -99 ] && [ $OPTION_S != -99 ]; then
         echo "La opción -s no es compatible con la opción -d"
         mostrarError
     fi
 done
-#---------------------------------------------------------------------------------
+
 if [ ! $CAMINOS ]; then # Tratar cuando no se especifica un camino (".")
     ComputoTam $OPTION_D $OPTION_S $OPTION_EXCL "."
     echo "$tam_total ."
@@ -113,10 +114,3 @@ else
     done
 fi
 #set +x
-#Si estás leyendo esto quiere decir que el git funciona desde VSCODE - Manjaro
-#he tenido que hacer git config --global pull.rebase false
-
-#https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup
-#https://www.jcchouinard.com/install-git-in-vscode/#enable-git
-#https://learn.microsoft.com/en-us/azure/developer/javascript/how-to/with-visual-studio-code/clone-github-repository?tabs=create-repo-command-palette%2Cinitialize-repo-activity-bar%2Ccreate-branch-command-palette%2Ccommit-changes-command-palette%2Cpush-command-palette
-#https://git-scm.com/book/es/v2/Fundamentos-de-Git-Guardando-cambios-en-el-Repositorio
