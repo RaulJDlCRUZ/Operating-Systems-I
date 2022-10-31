@@ -29,13 +29,13 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                         ComputoTam $option_d $option_s $option_excl $nodo
                         tam_total=$(expr $tam_total + $temp) #se recupera/restaura el valor anterior de tam_total y se acumula con lo obtenido de la llamada recursiva
                     fi
+                    let depth-=1
                     #Imprimir $tam_total
                     #echo "$tam_total $nodo"
                 elif [ -f $nodo ]; then #Si archivo regular
                     tam_archivo=$(wc -c < "$nodo")
                     tam_total=$(expr $tam_total + $tam_archivo) #Acumulamos
                     #echo "$tam_archivo $nodo"
-                let depth-=1
                 fi
             done
             echo "$tam_total $camino"
@@ -48,7 +48,7 @@ function mostrarError() #El programa sale (-1) en caso de error
     echo "ABORTANDO EJECUCIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]"
     exit 1
 } 
-# set -x
+#set -x
 ##################Comprobacion de errores#####################
 OPTION=""
 CONTADOR=1 #Se empieza en el arg 1
@@ -104,7 +104,7 @@ else
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------"
     done
 fi
-# set +x
+#set +x
 #Si estás leyendo esto quiere decir que el git funciona desde VSCODE - Manjaro
 #he tenido que hacer git config --global pull.rebase false
 
