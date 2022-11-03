@@ -32,16 +32,14 @@ function ComputoTam(){ #Aquí se calcula el tamaño del caminoX
                         ComputoTam $(expr $option_d - 1) $option_s $option_excl $nodo
                     fi
                     if [ $option_d == "-99" ] || [ $option_d -gt 0 ]; then
-                        if [ $matching ]; then
-                            continue 1;
-                        fi
+                        # if [ $matching ]; then
+                        #     tam_total=$(expr $temp + $tam_total)
+                        #     continue 1;
+                        # fi
                         echo "$tam_total $nodo"
                     fi
                     tam_total=$(expr $temp + $tam_total)
                 elif [ -f $nodo ]; then #Si archivo regular
-                    if [ $matching ]; then
-                        continue;
-                    fi
                     tam_archivo=$(wc -c < "$nodo")
                     tam_total=$(expr $tam_total + $tam_archivo) #Acumulamos
                 fi
