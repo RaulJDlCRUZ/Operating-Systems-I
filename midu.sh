@@ -1,4 +1,11 @@
 #!/bin/bash
+#########################################AUTORES#############################################
+# - Raúl Jiménez de la Cruz
+# - Pablo Blázquez Sánchez
+#       Grupo Martes
+#############################################################################################
+#   Práctica 1 - Laboratorio Sistemas Operativos I - Ingeniería Informática
+
 shopt -s dotglob #recuperar nodos ocultos
 tam_total=0    #Variable global que calcula el tamaño de cada fichero regular / directorio
 
