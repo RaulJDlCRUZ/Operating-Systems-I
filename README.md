@@ -66,7 +66,7 @@ Análogamente deberá hacerlo para la página de manual referente al comando du.
 Para las dudas sobre este proyecto práctico, podéis poneros en contacto con el profesor de la
 asignatura bien vía Campus Virtual o en el correo Ivan.GDiaz@uclm.es para solicitar tutorías.
 
-#################################################################################################
+#########################################################
 Esta es la práctica 2 de Sistemas Operativos I.
 
 Se trata de desarrollar un programa en C que proporcione un funcionamiento similar al mandato du
