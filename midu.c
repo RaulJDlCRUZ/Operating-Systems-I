@@ -10,60 +10,121 @@ int mostrarError(){
 }
 
 int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por lo que necesito un contador de argumentos y el puntero doble de argumentos
-    FILE *fp;
     int opcion_exclude=0;
     int opcion_s=0;
     int opcion_d=0;
 
-    while(--argc){
-        switch (argc)
-        {
-        case '-s': case '-d': case '--exclude':
-            /*
-            if [ $CAMINOS ]; then #Error si ya se ha recogido antes uno o más caminos
-            mostrarError
-            fi
-            */
-            switch (argc)
-            {
-            case '-d': case '--exclude':
-                /*
-                if [ $CONTADOR -eq $# ]; then #Error si -d o --exclude es el ultimo param (y no tiene ningun valor detras)
-                mostrarError
-                fi
-                OPTION=$i
-                */
-                break;
-            case '-s':
-                opcion_s=1;
-                break;
-            }
-            break;
-        default:
-            switch (opcion)
-            {
-            case '-d':
-                /*
-                NIVELES=$(expr $i / 1)                                  #Paso a entero
-                if [ ! $NIVELES ] || [ $NIVELES -lt 0 ]; then
-                mostrarError
-                fi
-                OPTION_D=$NIVELES
-                */
-                break;
-            case '--exclude':
-                //OPTION_EXCL=$i 
-                break;
-            case ' ':
-                //CAMINOS+=("$i") #$i representa un camino/ruta la anyadimos al array/vector
-                break;
-            }
-            //OPTION=""
-            break;
-        }
-    }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    // while(--argc){
+    //     switch (argc)
+    //     {
+    //     case '-s': case '-d': case '--exclude':
+    //         /*
+    //         if [ $CAMINOS ]; then #Error si ya se ha recogido antes uno o más caminos
+    //         mostrarError
+    //         fi
+    //         */
+    //         switch (argc)
+    //         {
+    //         case '-d': case '--exclude':
+    //             /*
+    //             if [ $CONTADOR -eq $# ]; then #Error si -d o --exclude es el ultimo param (y no tiene ningun valor detras)
+    //             mostrarError
+    //             fi
+    //             OPTION=$i
+    //             */
+    //             break;
+    //         case '-s':
+    //             opcion_s=1;
+    //             break;
+    //         }
+    //         break;
+    //     default:
+    //         switch (opcion)
+    //         {
+    //         case '-d':
+    //             /*
+    //             NIVELES=$(expr $i / 1)                                  #Paso a entero
+    //             if [ ! $NIVELES ] || [ $NIVELES -lt 0 ]; then
+    //             mostrarError
+    //             fi
+    //             OPTION_D=$NIVELES
+    //             */
+    //             break;
+    //         case '--exclude':
+    //             //OPTION_EXCL=$i 
+    //             break;
+    //         case ' ':
+    //             //CAMINOS+=("$i") #$i representa un camino/ruta la anyadimos al array/vector
+    //             break;
+    //         }
+    //         //OPTION=""
+    //         break;
+    //     }
+    // }
+
+/*
+hola \0
+habia\0
+int strcmp(PUNTERO1,PUNTERO)
+verdad=0
+mentira=resta direccion de primera o - primera a (pej: 67-65=2) DIFIERE DE 0
+
+*/
 
 
 
