@@ -71,6 +71,7 @@ verdad=0
 mentira=resta direccion de primera o - primera a (pej: 67-65=2) DIFIERE DE 0
 */
 
+//? Se puede hacer como en el ejercicio 23 pero cuando el argumento sea una d activar una flag que si no lo esta, se considere un error
 
 /*
 ##################Comprobacion de errores#####################
