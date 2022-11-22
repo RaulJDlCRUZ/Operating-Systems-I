@@ -13,55 +13,92 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     int flag_exclude=0;
     int flag_s=0;
     int flag_d=0;
-    int opcion=0;
 
-    while(--argc>0){
-        switch (opcion=(*++argv))
-        {
-        case '-s': case '-d': case '--exclude':
-            /*
-            if [ $CAMINOS ]; then #Error si ya se ha recogido antes uno o más caminos
-            mostrarError
-            fi
-            */
-            switch (argc)
-            {
-            case '-d': case '--exclude':
-                /*
-                if [ $CONTADOR -eq $# ]; then #Error si -d o --exclude es el ultimo param (y no tiene ningun valor detras)
-                mostrarError
-                fi
-                OPTION=$i
-                */
-                break;
-            case '-s':
-                flag_s=1;
-                break;
-            }
-            break;
-        default:
-            switch (opcion)
-            {
-            case '-d':
-                /*
-                NIVELES=$(expr $i / 1)                                  #Paso a entero
-                if [ ! $NIVELES ] || [ $NIVELES -lt 0 ]; then
-                mostrarError
-                fi
-                OPTION_D=$NIVELES
-                */
-                break;
-            case '--exclude':
-                //OPTION_EXCL=$i 
-                break;
-            case ' ':
-                //CAMINOS+=("$i") #$i representa un camino/ruta la anyadimos al array/vector
-                break;
-            }
-            //OPTION=""
-            break;
-        }
+    while(--argc){
+        
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // while(--argc>0){
+    //     switch (opcion=(*++argv))
+    //     {
+    //     case '-s': case '-d': case '--exclude':
+    //         /*
+    //         if [ $CAMINOS ]; then #Error si ya se ha recogido antes uno o más caminos
+    //         mostrarError
+    //         fi
+    //         */
+    //         switch (argc)
+    //         {
+    //         case '-d': case '--exclude':
+    //             /*
+    //             if [ $CONTADOR -eq $# ]; then #Error si -d o --exclude es el ultimo param (y no tiene ningun valor detras)
+    //             mostrarError
+    //             fi
+    //             OPTION=$i
+    //             */
+    //             break;
+    //         case '-s':
+    //             flag_s=1;
+    //             break;
+    //         }
+    //         break;
+    //     default:
+    //         switch (opcion)
+    //         {
+    //         case '-d':
+    //             /*
+    //             NIVELES=$(expr $i / 1)                                  #Paso a entero
+    //             if [ ! $NIVELES ] || [ $NIVELES -lt 0 ]; then
+    //             mostrarError
+    //             fi
+    //             OPTION_D=$NIVELES
+    //             */
+    //             break;
+    //         case '--exclude':
+    //             //OPTION_EXCL=$i 
+    //             break;
+    //         case ' ':
+    //             //!CAMINOS+=("$i") #$i representa un camino/ruta la anyadimos al array/vector
+    //             break;
+    //         }
+    //         //OPTION=""
+    //         break;
+    //     }
+    // }
 
 /*
 hola \0
@@ -72,6 +109,12 @@ mentira=resta direccion de primera o - primera a (pej: 67-65=2) DIFIERE DE 0
 */
 
 //? Se puede hacer como en el ejercicio 23 pero cuando el argumento sea una d activar una flag que si no lo esta, se considere un error
+//! Eso concretamente lo hace el esqueleto del midu
+
+/**
+ * ? Tambien se podria intentar recoger por un lado las opciones
+ * ? Y por otro lado las rutas
+*/
 
 /*
 ##################Comprobacion de errores#####################
