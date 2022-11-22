@@ -13,22 +13,31 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     int flag_exclude=0;
     int flag_s=0;
     int flag_d=0;
-
+    /**
+     * * for (i=1;i<argc;i++){
+     * *    if (strcmp(argv[i],"-s")==0){
+     * *        //codigo -s
+     * *        optionFlag=1;
+     * *    }
+     * *    else if (strcmp(argv[i],"--exclude")==0){
+     * *        //codigo --exclude
+     * *        optionFlag=2;
+     * *    }
+     * *}
+    */
     while(--argc){
-        
+        if (strcmp(*++argv,"-s")==0){
+            fprintf(stdout,"Has puesto una -s");
+        }
+        if (strcmp(*++argv,"-d")==0){
+            fprintf(stdout,"Has puesto una -d");
+        }
+        if (strcmp(*++argv,"--exclude")==0){
+            fprintf(stdout,"Has puesto un --exclude");
+        }
     }
 
-
-
-
-
-
-
-
-
-
-
-
+    return 0;
 
 
 
