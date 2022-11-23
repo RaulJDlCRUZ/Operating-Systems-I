@@ -60,7 +60,7 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
             flag|=0001;
             }
             --argc;
-        }
+        } //!la llamada a recorrido de rutas es dentro del while!!!!!
         else{
             fprintf(stderr,"Has puesto otra cosa\n");
         }
