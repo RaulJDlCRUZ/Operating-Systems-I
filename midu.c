@@ -74,7 +74,7 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     return 0;
 
 
-
+    //!Quitar el else, puesto que la otra cosa se supone que es una ruta, luego si es valida o no lo miro en la funcion recursiva.
 
     /**
      * * for (i=1;i<argc;i++){
