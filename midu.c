@@ -1,18 +1,81 @@
 #include <stdio.h>
-
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 void ComputoTam(){
 
 }
 
 int mostrarError(){
-    fprintf(stderr,"\nABORTANDO OPERACIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]");
+    fprintf(stderr,"ABORTANDO OPERACIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]");
     return 1;
 }
 
+int esnumero(char *cadena){
+    char c;
+    while((c=*cadena) !='\0' && isdigit(*cadena++));
+    return c=='\0';
+    //! devuelve cero si no es un numero, uno si lo es
+}
+
 int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por lo que necesito un contador de argumentos y el puntero doble de argumentos
-    int flag_exclude=0;
-    int flag_s=0;
-    int flag_d=0;
+
+   int flag = 0000; //octal
+   int nivel = 0;
+   char *patron;
+   /**
+    * * -d -s -x
+    * *  0  0  0
+    * *  0  0  1
+    * *  0  1  0
+    * *  0  1  1
+    * *  1  0  0
+    * *  1  0  1
+    * *  1  1  0 //! IMPOSIBLE
+    * *  1  1  1 //! IMPOSIBLE
+   */
+
+    while(--argc){
+        *++argv;
+        if (strcmp(*argv,"-d")==0){
+            //!Si pongo -d, miro si en el argumento siguiente tengo un numero. Avanzo el puntero para ello
+            if(argc==1) return mostrarError();
+            else if(!(esnumero(*++argv))) return mostrarError();
+            else{
+                fprintf(stdout,"Has puesto una -d con nivel: %d\n",(nivel=atoi(*argv)));
+                flag|=0100;
+            }
+            //*--argv;
+            --argc;
+        }
+        else if (strcmp(*argv,"-s")==0){
+            fprintf(stdout,"Has puesto una -s\n");
+            flag|=0010;
+
+        }
+        else if (strcmp(*argv,"--exclude")==0){
+            if(argc<=1) return mostrarError();
+            else{
+            fprintf(stdout,"Has puesto un --exclude y el patron a excluir es: %s\n",(patron=*++argv));
+            flag|=0001;
+            }
+            --argc;
+        }
+        else{
+            fprintf(stderr,"Has puesto otra cosa\n");
+        }
+            printf("Verificacion *argv y del flag: %s || %o\n",*argv,flag);
+    }
+    if(flag>0101){
+        fprintf(stderr,"Has intentado usar -d y -s a la vez, no tiene sentido.\n");
+        return mostrarError();
+    }
+    //? fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
+    return 0;
+
+
+
+
     /**
      * * for (i=1;i<argc;i++){
      * *    if (strcmp(argv[i],"-s")==0){
@@ -25,26 +88,6 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
      * *    }
      * *}
     */
-    while(--argc){
-        if (strcmp(*++argv,"-s")==0){
-            fprintf(stdout,"Has puesto una -s");
-        }
-        if (strcmp(*++argv,"-d")==0){
-            fprintf(stdout,"Has puesto una -d");
-        }
-        if (strcmp(*++argv,"--exclude")==0){
-            fprintf(stdout,"Has puesto un --exclude");
-        }
-    }
-
-    return 0;
-
-
-
-
-
-
-
 
 
 
