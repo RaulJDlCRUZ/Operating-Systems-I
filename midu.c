@@ -14,15 +14,20 @@ int mostrarError(){
 int esnumero(char *cadena){
     char c;
     while((c=*cadena) !='\0' && isdigit(*cadena++));
+    //guardamos ciclicamente el caracter actual si no es el "nulo" y lo siguiente tambien es un numero
+    //implica cortar el metodo si en algun momento el puntero apunta a algo que NO sea un numero
+    //con esta comprobacion tambien logramos obtener enteros NO nulos. No tiene sentido explorar p.ej. -2 niveles
     return c=='\0';
     //! devuelve cero si no es un numero, uno si lo es
 }
 
 int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por lo que necesito un contador de argumentos y el puntero doble de argumentos
 
-   int flag = 0000; //octal
+   int flag = 0000;
    int nivel = 0;
-   char *patron;
+   char *patron; //! EXCLUDE
+   //? FILE *fp;
+
    /**
     * * -d -s -x
     * *  0  0  0
@@ -39,42 +44,51 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
         *++argv;
         if (strcmp(*argv,"-d")==0){
             //!Si pongo -d, miro si en el argumento siguiente tengo un numero. Avanzo el puntero para ello
-            if(argc==1) return mostrarError();
-            else if(!(esnumero(*++argv))) return mostrarError();
+            // if(argc==1) exit(mostrarError());
+            // else if(!(esnumero(*++argv))) exit(mostrarError());
+            if(argc==1 || !(esnumero(*++argv))) exit(mostrarError());
             else{
-                fprintf(stdout,"Has puesto una -d con nivel: %d\n",(nivel=atoi(*argv)));
+                //fprintf(stdout,"Has puesto una -d con nivel: %d\n",(nivel=atoi(*argv)));
+                nivel=atoi(*argv);
                 flag|=0100;
             }
             //*--argv;
             --argc;
         }
         else if (strcmp(*argv,"-s")==0){
-            fprintf(stdout,"Has puesto una -s\n");
+            //fprintf(stdout,"Has puesto una -s\n");
             flag|=0010;
 
         }
         else if (strcmp(*argv,"--exclude")==0){
-            if(argc<=1) return mostrarError();
+            if(argc<=1) exit(mostrarError());
             else{
-            fprintf(stdout,"Has puesto un --exclude y el patron a excluir es: %s\n",(patron=*++argv));
+            //fprintf(stdout,"Has puesto un --exclude y el patron a excluir es: %s\n",(patron=*++argv));
+            patron=*++argv;
             flag|=0001;
             }
             --argc;
         }
         else{
-            fprintf(stderr,"Has puesto otra cosa\n");
+            fprintf(stdout,"Ruta? %s\n",*argv);
         }
-            printf("Verificacion *argv y del flag: %s || %o\n",*argv,flag);
+        //?printf("Verificacion *argv y del flag: %s || %o\n",*argv,flag);
     }
     if(flag>0101){
         fprintf(stderr,"Has intentado usar -d y -s a la vez, no tiene sentido.\n");
-        return mostrarError();
+        exit(mostrarError());
     }
     //? fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
+    if ((flag&0100)>0)printf("-d con nivel %d\n",nivel);
+    if ((flag&0010)>0)printf("-s\n");
+    if ((flag&0001)>0)printf("--exclude y patron \"%s\"\n",patron);
+    /**
+     * ! AQUI SE HARÁ EL LLAMADO A LA FUNCION
+     * ! SI SE DA EL CASO QUE YA NO QUEDEN MÁS ARGUMENTOS PUES LA RUTA SERA EL DIRECTORIO ACTUAL
+     * ! EN CAMBIO, SI QUEDAN VARIOS ARGUMENTOS, PASARAN COMO PARAMETRO A LA FUNCION DE MANERA SECUENCIAL (FOR) PORQUE LE PASO UNA RUTA.
+    */
+
     return 0;
-
-
-
 
     /**
      * * for (i=1;i<argc;i++){
