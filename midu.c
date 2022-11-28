@@ -2,8 +2,12 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-void ComputoTam(){
+#include <unistd.h>
 
+#define MAX_BUFFER 4096
+
+void ComputoTam(int opciones, int nivel, char *patron, char *camino){
+    printf("%s\n",camino);
 }
 
 int parametros(char *cadena){
@@ -35,6 +39,7 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
    char flag_recoger_parametros = 0;
    int nivel = 0;
    char *patron;
+   char ruta[MAX_BUFFER];
    //? FILE *fp;
 
    /**
@@ -86,9 +91,15 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     if ((flag_opciones&04)>0)printf("-d con nivel %d\n",nivel);
     if ((flag_opciones&02)>0)printf("-s\n");
     if ((flag_opciones&01)>0)printf("--exclude y patron \"%s\"\n",patron);
-    
-    if( flag_recoger_parametros != 1 && argc == 0 ) fprintf(stdout,"Las opciones se ejecutan en la ruta actual.");
-    else while(argc-->0) fprintf(stdout,"Ejecutar en %s\n",*argv++);
+
+    if( flag_recoger_parametros != 1 && argc == 0 ){
+        fprintf(stdout,"Las opciones se ejecutan en la ruta actual.\n");
+        ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/getcwd(ruta, MAX_BUFFER));
+    }
+    else while(argc-->0){
+        fprintf(stdout,"Ejecutar en\n");
+        ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/*argv++);
+    }
 
     /**
      * ! AQUI SE HARÁ EL LLAMADO A LA FUNCION
