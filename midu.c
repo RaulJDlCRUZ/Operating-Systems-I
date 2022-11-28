@@ -31,8 +31,8 @@ int mostrarError(){
 
 int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por lo que necesito un contador de argumentos y el puntero doble de argumentos
 
-   int flag = 0000;
-   int ruta = 0;
+   int flag_opciones = 0000;
+   char flag_ruta = 0;
    int nivel = 0;
    char *patron; //! EXCLUDE
    //? FILE *fp;
@@ -53,40 +53,40 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
         *++argv;
         switch(parametros(*argv)){
             case 1:
-            if (argc==1 || !(esnumero(*++argv))||ruta==1) exit(mostrarError());
+            if (argc==1 || !(esnumero(*++argv))||flag_ruta==1) exit(mostrarError());
             else{
                 nivel=atoi(*argv);
-                flag|=0100;
+                flag_opciones|=0100;
             }
             --argc;
             break;
             case 2:
-            if(ruta==1) exit(mostrarError());
-            else flag|=0010;
+            if(flag_ruta==1) exit(mostrarError());
+            else flag_opciones|=0010;
             break;
             case 3:
-            if(argc<=1 || ruta==1) exit(mostrarError());
+            if(argc<=1 || flag_ruta==1) exit(mostrarError());
             else{
             //fprintf(stdout,"Has puesto un --exclude y el patron a excluir es: %s\n",(patron=*++argv));
             patron=*++argv;
-            flag|=0001;
+            flag_opciones|=0001;
             }
             --argc;
             break;
             default:
-            ruta=1;
+            flag_ruta=1;
             fprintf(stdout,"Ruta? %s\n",*argv);
         }
     }
 
-    if(flag>0101){
+    if(flag_opciones>0101){
         fprintf(stderr,"Has intentado usar -d y -s a la vez, no tiene sentido.\n");
         exit(mostrarError());
     }
     //? fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
-    if ((flag&0100)>0)printf("-d con nivel %d\n",nivel);
-    if ((flag&0010)>0)printf("-s\n");
-    if ((flag&0001)>0)printf("--exclude y patron \"%s\"\n",patron);
+    if ((flag_opciones&0100)>0)printf("-d con nivel %d\n",nivel);
+    if ((flag_opciones&0010)>0)printf("-s\n");
+    if ((flag_opciones&0001)>0)printf("--exclude y patron \"%s\"\n",patron);
     /**
      * ! AQUI SE HARÁ EL LLAMADO A LA FUNCION
      * ! SI SE DA EL CASO QUE YA NO QUEDEN MÁS ARGUMENTOS PUES LA RUTA SERA EL DIRECTORIO ACTUAL
@@ -202,15 +202,6 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     // }
 
 /*
-hola \0
-habia\0
-int strcmp(PUNTERO1,PUNTERO)
-verdad=0
-mentira=resta direccion de primera o - primera a (pej: 67-65=2) DIFIERE DE 0
-*/
-
-//? Se puede hacer como en el ejercicio 23 pero cuando el argumento sea una d activar una flag que si no lo esta, se considere un error
-//! Eso concretamente lo hace el esqueleto del midu
 
 /**
  * ? Tambien se podria intentar recoger por un lado las opciones
