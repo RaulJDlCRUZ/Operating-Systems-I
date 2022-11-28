@@ -6,6 +6,24 @@ void ComputoTam(){
 
 }
 
+int parametros(char *cadena){
+    int menu=0;
+    if (strcmp(cadena,"-d")==0) menu = 1;
+    else if (strcmp(cadena,"-s")==0) menu = 2;
+    else if (strcmp(cadena,"--exclude")==0) menu = 3;
+    return menu;
+}
+
+int esnumero(char *cadena){
+    char c;
+    while((c=*cadena) !='\0' && isdigit(*cadena++));
+    //guardamos ciclicamente el caracter actual si no es el "nulo" y lo siguiente tambien es un numero
+    //implica cortar el metodo si en algun momento el puntero apunta a algo que NO sea un numero
+    //con esta comprobacion tambien logramos obtener enteros NO nulos. No tiene sentido explorar p.ej. -2 niveles
+    return c=='\0';
+    //! devuelve cero si no es un numero, uno si lo es
+}
+
 int mostrarError(){
     fprintf(stderr,"ABORTANDO OPERACIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]");
     return 1;
@@ -14,7 +32,7 @@ int mostrarError(){
 int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por lo que necesito un contador de argumentos y el puntero doble de argumentos
 
    int flag = 0000;
-   //!UTILIZAR OTRO DIGITO PARA MIRAR SI HE EMPEZADO CON LAS RUTAS. PERO DEBO MODIFICAR EL -D Y -S
+   int ruta = 0;
    int nivel = 0;
    char *patron; //! EXCLUDE
    //? FILE *fp;
@@ -30,38 +48,37 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     * *  1  1  0 //! IMPOSIBLE
     * *  1  1  1 //! IMPOSIBLE
    */
-    char c;
+
     while(--argc){
         *++argv;
-        if (strcmp(*argv,"-d")==0){
-            //!Si pongo -d, miro si en el argumento siguiente tengo un numero. Avanzo el puntero para ello
-            if (argc==1 || isdigit(c= (*++argv)[0])) exit(mostrarError()); //tiene que ser un digito. Entonces no valen letras ni enteros negativos
+        switch(parametros(*argv)){
+            case 1:
+            if (argc==1 || !(esnumero(*++argv))||ruta==1) exit(mostrarError());
             else{
-                //fprintf(stdout,"Has puesto una -d con nivel: %d\n",(nivel=atoi(*argv)));
                 nivel=atoi(*argv);
                 flag|=0100;
             }
             --argc;
-        }
-        else if (strcmp(*argv,"-s")==0){
-            //fprintf(stdout,"Has puesto una -s\n");
-            flag|=0010;
-
-        }
-        else if (strcmp(*argv,"--exclude")==0){
-            if(argc<=1) exit(mostrarError());
+            break;
+            case 2:
+            if(ruta==1) exit(mostrarError());
+            else flag|=0010;
+            break;
+            case 3:
+            if(argc<=1 || ruta==1) exit(mostrarError());
             else{
             //fprintf(stdout,"Has puesto un --exclude y el patron a excluir es: %s\n",(patron=*++argv));
             patron=*++argv;
             flag|=0001;
             }
             --argc;
-        } //!la llamada a recorrido de rutas es dentro del while!!!!!
-        else{
+            break;
+            default:
+            ruta=1;
             fprintf(stdout,"Ruta? %s\n",*argv);
         }
-        //?printf("Verificacion *argv y del flag: %s || %o\n",*argv,flag);
     }
+
     if(flag>0101){
         fprintf(stderr,"Has intentado usar -d y -s a la vez, no tiene sentido.\n");
         exit(mostrarError());
@@ -91,7 +108,37 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
      * *}
     */
 
+    // while(--argc){
+    //     *++argv;
+    //     if (strcmp(*argv,"-d")==0){
+    //         //!Si pongo -d, miro si en el argumento siguiente tengo un numero. Avanzo el puntero para ello
+    //         if (argc==1 || !(esnumero(*++argv))) exit(mostrarError());
+    //         else{
+    //             //fprintf(stdout,"Has puesto una -d con nivel: %d\n",(nivel=atoi(*argv)));
+    //             nivel=atoi(*argv);
+    //             flag|=0100;
+    //         }
+    //         --argc;
+    //     }
+    //     else if (strcmp(*argv,"-s")==0){
+    //         //fprintf(stdout,"Has puesto una -s\n");
+    //         flag|=0010;
 
+    //     }
+    //     else if (strcmp(*argv,"--exclude")==0){
+    //         if(argc<=1) exit(mostrarError());
+    //         else{
+    //         //fprintf(stdout,"Has puesto un --exclude y el patron a excluir es: %s\n",(patron=*++argv));
+    //         patron=*++argv;
+    //         flag|=0001;
+    //         }
+    //         --argc;
+    //     } //!la llamada a recorrido de rutas es dentro del while!!!!!
+    //     else{
+    //         fprintf(stdout,"Ruta? %s\n",*argv);
+    //     }
+    //     //?printf("Verificacion *argv y del flag: %s || %o\n",*argv,flag);
+    // }
 
 
 
