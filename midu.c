@@ -11,19 +11,10 @@ int mostrarError(){
     return 1;
 }
 
-int esnumero(char *cadena){
-    char c;
-    while((c=*cadena) !='\0' && isdigit(*cadena++));
-    //guardamos ciclicamente el caracter actual si no es el "nulo" y lo siguiente tambien es un numero
-    //implica cortar el metodo si en algun momento el puntero apunta a algo que NO sea un numero
-    //con esta comprobacion tambien logramos obtener enteros NO nulos. No tiene sentido explorar p.ej. -2 niveles
-    return c=='\0';
-    //! devuelve cero si no es un numero, uno si lo es
-}
-
 int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por lo que necesito un contador de argumentos y el puntero doble de argumentos
 
    int flag = 0000;
+   //!UTILIZAR OTRO DIGITO PARA MIRAR SI HE EMPEZADO CON LAS RUTAS. PERO DEBO MODIFICAR EL -D Y -S
    int nivel = 0;
    char *patron; //! EXCLUDE
    //? FILE *fp;
@@ -39,20 +30,17 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     * *  1  1  0 //! IMPOSIBLE
     * *  1  1  1 //! IMPOSIBLE
    */
-
+    char c;
     while(--argc){
         *++argv;
         if (strcmp(*argv,"-d")==0){
             //!Si pongo -d, miro si en el argumento siguiente tengo un numero. Avanzo el puntero para ello
-            // if(argc==1) exit(mostrarError());
-            // else if(!(esnumero(*++argv))) exit(mostrarError());
-            if(argc==1 || !(esnumero(*++argv))) exit(mostrarError());
+            if (argc==1 || isdigit(c= (*++argv)[0])) exit(mostrarError()); //tiene que ser un digito. Entonces no valen letras ni enteros negativos
             else{
                 //fprintf(stdout,"Has puesto una -d con nivel: %d\n",(nivel=atoi(*argv)));
                 nivel=atoi(*argv);
                 flag|=0100;
             }
-            //*--argv;
             --argc;
         }
         else if (strcmp(*argv,"-s")==0){
