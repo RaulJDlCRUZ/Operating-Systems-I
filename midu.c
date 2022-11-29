@@ -6,7 +6,10 @@
 
 #define MAX_BUFFER 4096
 
-void ComputoTam(int opciones, int nivel, char *patron, char *camino){
+void ComputoTam(int opciones, int nivel, char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
+    if ((opciones&04)>0)printf("-d con nivel %d\n",nivel);
+    if ((opciones&02)>0)printf("-s\n");
+    if ((opciones&01)>0)printf("--exclude y patron \"%s\"\n",patron);
     printf("%s\n",camino);
 }
 
@@ -77,28 +80,30 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
                 --argc;
                 break;
             default:
-                flag_recoger_parametros=1;
+                flag_recoger_parametros=1; //?Opciones no permitidas?
                 argc++;
             //como el while hace una iteracion mas lo compenso incrementando momentaneamente el contador de argumentos. Alineamos el argc y argv
         }
     }
-    printf("--%d--\n",flag_opciones);
+    //printf("--%d--\n",flag_opciones);
     if(flag_opciones>05){
         fprintf(stderr,"Has intentado usar -d y -s a la vez, no tiene sentido.\n");
         exit(mostrarError());
     }
-    //? fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
-    if ((flag_opciones&04)>0)printf("-d con nivel %d\n",nivel);
-    if ((flag_opciones&02)>0)printf("-s\n");
-    if ((flag_opciones&01)>0)printf("--exclude y patron \"%s\"\n",patron);
+    // fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
 
     if( flag_recoger_parametros != 1 && argc == 0 ){
-        fprintf(stdout,"Las opciones se ejecutan en la ruta actual.\n");
-        ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/getcwd(ruta, MAX_BUFFER));
+        //fprintf(stdout,"Las opciones se ejecutan en la ruta actual.\n");
+        ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/getcwd(ruta, MAX_BUFFER)); //?Sin parametros?
+        fprintf(stdout,"|||||||||||||||||||||||||||||||||||||||\n");
+        //tam_total = 0;
     }
     else while(argc-->0){
-        fprintf(stdout,"Ejecutar en\n");
-        ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/*argv++);
+        //fprintf(stdout,"Ejecutar en\n");
+        if((strcmp(*argv,".")==0)) ComputoTam(flag_opciones,nivel,patron,getcwd(ruta, MAX_BUFFER)); //?Si quiero que sea un . == ruta actual?
+        else ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/*argv++); //?No se podria hacer esto como un operador ternario?
+        fprintf(stdout,"|||||||||||||||||||||||||||||||||||||||\n");
+        //tam_total = 0;
     }
 
     /**
