@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 #define MAX_BUFFER 4096
-
+//de tipo long o entero y retornar todo el rato
 void ComputoTam(int opciones, int nivel, char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
     if ((opciones&04)>0)printf("-d con nivel %d\n",nivel);
     if ((opciones&02)>0)printf("-s\n");
