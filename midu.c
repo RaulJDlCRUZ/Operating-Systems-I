@@ -83,6 +83,7 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
                 break;
             default:
                 flag_recoger_parametros=1; //?Opciones no permitidas?
+                //!ahorro
                 argc++;
             //como el while hace una iteracion mas lo compenso incrementando momentaneamente el contador de argumentos. Alineamos el argc y argv
         }
@@ -103,7 +104,9 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     else while(argc-->0){
         //fprintf(stdout,"Ejecutar en\n");
         if((strcmp(*argv,".")==0)) ComputoTam(flag_opciones,nivel,patron,getcwd(ruta, MAX_BUFFER)); //?Si quiero que sea un . == ruta actual?
+        //!ME PUEDO AHORRAR LA LINEA, ME LO PILLA BIEN
         else ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/*argv++); //?No se podria hacer esto como un operador ternario?
+        //!REPITO, ME LO VOY A AHORRAR, ENTONCES NO HACE FALTA.
         fprintf(stdout,"|||||||||||||||||||||||||||||||||||||||\n");
         //tam_total = 0;
     }
