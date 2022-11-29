@@ -5,14 +5,14 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-
 #define MAX_BUFFER 4096
-//de tipo long o entero y retornar todo el rato
-void ComputoTam(int opciones, int nivel, char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
+
+long ComputoTam(int opciones, int nivel, char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
     if ((opciones&04)>0)printf("-d con nivel %d\n",nivel);
     if ((opciones&02)>0)printf("-s\n");
     if ((opciones&01)>0)printf("--exclude y patron \"%s\"\n",patron);
     printf("%s\n",camino);
+    return 255;
 }
 
 int parametros(char *cadena){
@@ -82,8 +82,7 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
                 --argc;
                 break;
             default:
-                flag_recoger_parametros=1; //?Opciones no permitidas?
-                //!ahorro
+                flag_recoger_parametros=1;
                 argc++;
             //como el while hace una iteracion mas lo compenso incrementando momentaneamente el contador de argumentos. Alineamos el argc y argv
         }
@@ -96,27 +95,13 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     // fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
 
     if( flag_recoger_parametros != 1 && argc == 0 ){
-        //fprintf(stdout,"Las opciones se ejecutan en la ruta actual.\n");
-        ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/getcwd(ruta, MAX_BUFFER)); //?Sin parametros?
+        fprintf(stdout,"%ld",(long) ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/getcwd(ruta, MAX_BUFFER)));
         fprintf(stdout,"|||||||||||||||||||||||||||||||||||||||\n");
-        //tam_total = 0;
     }
     else while(argc-->0){
-        //fprintf(stdout,"Ejecutar en\n");
-        if((strcmp(*argv,".")==0)) ComputoTam(flag_opciones,nivel,patron,getcwd(ruta, MAX_BUFFER)); //?Si quiero que sea un . == ruta actual?
-        //!ME PUEDO AHORRAR LA LINEA, ME LO PILLA BIEN
-        else ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/*argv++); //?No se podria hacer esto como un operador ternario?
-        //!REPITO, ME LO VOY A AHORRAR, ENTONCES NO HACE FALTA.
+        fprintf(stdout,"%ld",(long) ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/*argv++));
         fprintf(stdout,"|||||||||||||||||||||||||||||||||||||||\n");
-        //tam_total = 0;
     }
-
-    /**
-     * ! AQUI SE HARÁ EL LLAMADO A LA FUNCION
-     * ! SI SE DA EL CASO QUE YA NO QUEDEN MÁS ARGUMENTOS PUES LA RUTA SERA EL DIRECTORIO ACTUAL
-     * ! EN CAMBIO, SI QUEDAN VARIOS ARGUMENTOS, PASARAN COMO PARAMETRO A LA FUNCION DE MANERA SECUENCIAL (FOR) PORQUE LE PASO UNA RUTA.
-    */
-
     return 0;
 
 /*
