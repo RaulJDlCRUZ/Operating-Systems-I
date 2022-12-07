@@ -10,7 +10,7 @@
 
 #define MAX_BUFFER 4096
 
-long ComputoTam(int opciones, int nivel, char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
+long ComputoTam(int opciones, int nivel, const char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
     if ((opciones&04)>0)printf("-d con nivel %d\n",nivel);
     if ((opciones&02)>0)printf("-s\n");
     if ((opciones&01)>0)printf("--exclude y patron \"%s\"\n",patron);
