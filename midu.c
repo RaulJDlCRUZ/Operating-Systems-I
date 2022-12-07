@@ -1,17 +1,33 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <fcntl.h>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #define MAX_BUFFER 4096
 
-long ComputoTam(int opciones, int nivel, char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
+long ComputoTam(int opciones, int nivel, const char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
     if ((opciones&04)>0)printf("-d con nivel %d\n",nivel);
     if ((opciones&02)>0)printf("-s\n");
     if ((opciones&01)>0)printf("--exclude y patron \"%s\"\n",patron);
     printf("%s\n",camino);
+
+    DIR *d;
+    FILE *f;
+    struct dirent *nodo;
+    struct stat st;
+    char nombre[MAX_BUFFER + 1]; /* Directorio + "/" + nombre del nodo en el directorio */
+
+    if( ((d = opendir(camino)) == NULL) && ((f = fopen(camino,"r")) == NULL))
+    {
+         fprintf(stderr, "Error en %s\n", camino);
+         return -9999999;
+    }
+
     return 255;
 }
 
