@@ -121,7 +121,7 @@ int esnumero(char *cadena){
 }
 
 int mostrarError(){
-    fprintf(stderr,"ABORTANDO OPERACIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]");
+    fprintf(stderr,"ABORTANDO OPERACIÓN. Modo de empleo: midu [opciones] [camino1 camino2 camino3 ...]\n");
     return 1;
 }
 
@@ -182,11 +182,13 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
     // fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
 
     if( flag_recoger_parametros != 1 && argc == 0 ){
-        fprintf(stdout,"%ld %s\n",ComputoTam(flag_opciones,nivel,patron,getcwd(ruta, MAX_BUFFER)),ruta);
+        fprintf(stdout,"%ld %s\n",ComputoTam(flag_opciones,nivel,patron,getcwd(ruta, MAX_BUFFER)),".");
+        printf("----------------------------------------------------------------------------\n");
         tam_total=0;
     }
     else while(argc-->0){
         fprintf(stdout,"%ld %s\n",ComputoTam(flag_opciones,nivel,patron,*argv),*argv);
+        printf("----------------------------------------------------------------------------\n");
         *argv++;
         tam_total=0;
     }
