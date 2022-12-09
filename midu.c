@@ -41,7 +41,7 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
     }
 
     if (S_ISDIR(st.st_mode)){
-        fprintf(stdout,"%s es un directorio.\n",camino);
+        //fprintf(stdout,"%s es un directorio.\n",camino);
         if ((opciones&02)>0) nivel-=nivel;
         if ((d = opendir(camino)) == NULL){
         fprintf(stderr, "Error en directorio %s\n", camino);
@@ -66,7 +66,8 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
                 exit(EXIT_FAILURE);
                 }
             if (S_ISDIR(st.st_mode)){
-                printf("Quiero llamar a funcion recursiva.\n");
+                //printf("Quiero llamar a funcion recursiva.\n");
+                ComputoTam(opciones, nivel, patron, nombre_nodo);
                 }
             if (S_ISREG(st.st_mode)){
                 printf("Quiero acumular con auxiliar.\n");
