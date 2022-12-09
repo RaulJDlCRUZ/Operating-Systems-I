@@ -67,10 +67,22 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
                 }
             if (S_ISDIR(st.st_mode)){
                 //printf("Quiero llamar a funcion recursiva.\n");
-                ComputoTam(opciones, nivel, patron, nombre_nodo);
+                long temp = tam_total;
+                tam_total = 0;
+                if ((opciones&04)>0){
+                    ComputoTam(opciones, nivel-1, patron, nombre_nodo);
+                }else{
+                    ComputoTam(opciones, nivel, patron, nombre_nodo);
                 }
+                //ComputoTam(opciones, nivel, patron, nombre_nodo);
+                if ((opciones&04)==0 || nivel>0){
+                    fprintf(stdout,"%ld %s", tam_total, nombre_nodo);
+                }
+                tam_total += temp;
+            }
             if (S_ISREG(st.st_mode)){
-                printf("Quiero acumular con auxiliar.\n");
+                // printf("Quiero acumular con auxiliar.\n");
+                tam_total += st.st_size;
                 }
             }
         }
