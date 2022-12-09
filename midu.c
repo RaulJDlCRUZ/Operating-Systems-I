@@ -9,9 +9,9 @@
 #include <string.h>
 
 #define MAX_BUFFER 4096
+long tam_total=0;
 
 long ComputoTam(int opciones, int nivel, const char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
-    long tam_total=0;
     DIR *d;
     FILE *f;
     struct dirent *nodo;
@@ -35,8 +35,9 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
     }
     /*Fichero regular?*/
     if (S_ISREG(st.st_mode)){
-        fprintf(stdout,"%s es fichero regular.Bytes: %d\n",camino,st.st_size);
+        //! NO fprintf(stdout,"%s es fichero regular.Bytes: %d\n",camino,st.st_size);
         tam_total+=st.st_size;
+        //!printf("||%ld||\n",tam_total);
     /*Directorio?*/
     }
 
@@ -44,10 +45,11 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
         //fprintf(stdout,"%s es un directorio.\n",camino);
         if ((opciones&02)>0) nivel-=nivel;
         if ((d = opendir(camino)) == NULL){
-        fprintf(stderr, "Error en directorio %s\n", camino);
+        fprintf(stderr, "Error en directorio %s\n", camino); //! Cuidado
         exit(EXIT_FAILURE);
         }
         while ((nodo = readdir(d)) != NULL){
+
             // if (stat(nombre_nodo, &st) == -1)
             // {
             //     fprintf(stderr, "Error en %s\n", nodo->d_name);
@@ -59,8 +61,8 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
 
         if (strcmp(nodo->d_name, ".") && strcmp(nodo->d_name, ".."))
         {
-            sprintf(nombre_nodo, "%s/%s", camino, nodo->d_name);
-            printf("%s\n", nombre_nodo);
+            sprintf(nombre_nodo, "%s/%s\n", camino, nodo->d_name); //? NO QUIERO IMPRIMIR PERO NECESITO ESTA LINEA
+            //!printf("%s\n", nombre_nodo);
             if (stat(nombre_nodo, &st) == -1){
                 fprintf(stderr, "Error en %s\n", nodo->d_name);
                 exit(EXIT_FAILURE);
@@ -69,26 +71,27 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
                 //printf("Quiero llamar a funcion recursiva.\n");
                 long temp = tam_total;
                 tam_total = 0;
-                if ((opciones&04)>0){
-                    ComputoTam(opciones, nivel-1, patron, nombre_nodo);
-                }else{
-                    ComputoTam(opciones, nivel, patron, nombre_nodo);
-                }
+                if ((opciones&04)==0) ComputoTam(opciones, nivel, patron, nombre_nodo);
+                else ComputoTam(opciones, nivel-1, patron, nombre_nodo);
                 //ComputoTam(opciones, nivel, patron, nombre_nodo);
                 if ((opciones&04)==0 || nivel>0){
                     fprintf(stdout,"%ld %s", tam_total, nombre_nodo);
                 }
                 tam_total += temp;
+                //!printf("||%ld||\n",tam_total);
             }
-            if (S_ISREG(st.st_mode)){
+            else if (S_ISREG(st.st_mode)){
                 // printf("Quiero acumular con auxiliar.\n");
-                tam_total += st.st_size;
+                long arch = st.st_size;
+                //!printf("--%ld--\n",arch);
+                tam_total+=arch;
+                //!printf("||%ld||\n",tam_total);
                 }
             }
         }
         closedir(d);
     }
-    return 255;
+    return tam_total;
 }
     /*
     local option_d=$1; local option_s=$2; local option_excl=$3; local camino=$4; local matching
@@ -212,12 +215,14 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
         exit(mostrarError());
     }
     // fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
-
+    //! ----- ARREGLAR -----
     if( flag_recoger_parametros != 1 && argc == 0 ){
-        fprintf(stdout,"%ld\n",(long) ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/getcwd(ruta, MAX_BUFFER)));
+        fprintf(stdout,"%ld\n",ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/getcwd(ruta, MAX_BUFFER)));
+        tam_total=0;
     }
     else while(argc-->0){
-        fprintf(stdout,"%ld\n",(long) ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/*argv++));
+        fprintf(stdout,"%ld\n",ComputoTam(flag_opciones,nivel,patron,/*ruta/directorio_actual*/*argv++));
+        tam_total=0;
     }
     return 0;
 
