@@ -1,3 +1,10 @@
+/*##############################AUTORES########################################*/
+/* - Pablo Blázquez Sánchez
+   - Raúl Jiménez de la Cruz
+        Grupo Martes
+*/
+/*#############################################################################*/
+/*   Práctica 2 - Laboratorio Sistemas Operativos I - Ingeniería Informática   */
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -8,9 +15,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <regex.h>
-
+//!No entiendo una mierda del MAX_BUFFER Raúl
 #define MAX_BUFFER 4096
-long tam_total=0;
+long tam_total=0; /*Variable global que calcula el tamaño de cada fichero regular / directorio*/
 
 long ComputoTam(int opciones, int nivel, const char *patron, const char *camino){ //?Buena idea si dejo los niveles y tal como parametros globales?
     DIR *d;
@@ -21,8 +28,7 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
 
     regex_t reegex;
     int valor_reegex=0;
-    
-    // printf("%s\n",camino);
+    //!NO entiendo una mierda Raúl para definir las variables, explicarlas
 
     /*¿El camino-argumento es demasiado largo?*/
     if (strlen ( camino + 1 ) > sizeof (nombre_nodo)) {
@@ -30,41 +36,31 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
         exit (EXIT_FAILURE);
     }
     /*¿El camino-argumento es un directorio o fichero regular valido?*/
-    if( /*((d = opendir(camino)) == NULL) && ((f = fopen(camino,"r")) == NULL)*/ !stat(camino, &st) == 0 ){
+    if( !stat(camino, &st) == 0 ){
         fprintf(stderr, "Error en %s\n", camino);
         exit (EXIT_FAILURE);
     }
         
-    //if ((opciones&04)>0)printf("-d con nivel %d\n",nivel);
-    //if ((opciones&02)>0)printf("-s\n");
 
     if((opciones&01)>0){//si esta activado el exclude
-        //!!!!! msg como entro al nodo, verifico otra vez si el patron es parte del camino+nodo
-        //!printf("--exclude y patron \"%s\"\n",patron);
         valor_reegex = regcomp( &reegex, /*este es el patron*/patron, 0);
         valor_reegex = regexec( &reegex,camino,0, NULL, 0);
         //ruta del nodo para ver si está contenido el patrón con el que hemos configurado regcomp
-        //!printf("%d\n",valor_reegex);
     }
-    //(opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH);
 
 if ((opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH)){
-    /*Fichero regular?*/
+    /*¿El camino es un fichero regular?*/
     if (S_ISREG(st.st_mode)){
-        //! NO fprintf(stdout,"%s es fichero regular.Bytes: %d\n",camino,st.st_size);
-        printf("entro");
-        tam_total+=st.st_size;
-        //!printf("||%ld||\n",tam_total);
-    /*Directorio?*/
+        tam_total+=st.st_size; /*El tamaño será el del archivo*/
     }
 
+    /*¿El camino es un directorio?*/
     if (S_ISDIR(st.st_mode)){
-        //fprintf(stdout,"%s es un directorio.\n",camino);
-        if ((opciones&02)>0){
+        if ((opciones&02)>0){/*Si la opción -s está activada*/
         nivel-=nivel;
         opciones+=02;
         }
-        if ((d = opendir(camino)) == NULL){
+        if ((d = opendir(camino)) == NULL){ //!NO entiendo una mierda Raúl
         fprintf(stderr, "Error en directorio %s\n", camino);
         exit(EXIT_FAILURE);
         }
@@ -72,44 +68,35 @@ if ((opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH)){
 
         if (strcmp(nodo->d_name, ".") && strcmp(nodo->d_name, ".."))
         {
-            sprintf(nombre_nodo, "%s/%s", camino, nodo->d_name);
-            //printf("%s\n", nombre_nodo); NI DE CONYA.
-            if (stat(nombre_nodo, &st) == -1){
+            sprintf(nombre_nodo, "%s/%s", camino, nodo->d_name); //!NO entiendo una mierda Raúl
+            if (stat(nombre_nodo, &st) == -1){ //!NO entiendo una mierda Raúl
                 fprintf(stderr, "Error en %s\n", nodo->d_name);
                 exit(EXIT_FAILURE);
                 }
 
-            if((opciones&01)>0){//si esta activado el exclude
-                //!printf("--exclude y patron \"%s\"\n",patron);
+            if((opciones&01)>0){/*Si la opción --exclude "PATRON" está activada*/
                 valor_reegex = regcomp( &reegex, /*este es el patron*/patron, 0);
                 valor_reegex = regexec( &reegex,nombre_nodo,0, NULL, 0);
                 //ruta del nodo para ver si está contenido el patrón con el que hemos configurado regcomp
-                //!printf("Dentro del nodo: %d\n",valor_reegex);
                 }
             if ((opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH)) {
-                if (S_ISDIR(st.st_mode)){
-                //printf("Quiero llamar a funcion recursiva.\n");
-                long temp = tam_total;
-                tam_total = 0;
-                if ((opciones&04)==0){
+                if (S_ISDIR(st.st_mode)){ /*Si el nodo es un directorio*/
+                long temp = tam_total; /*Guardamos el tam_total en una variable temporal*/
+                tam_total = 0; /*Reiniciamos la variable tam_total a 0 antes de la llamada recursiva*/
+                if ((opciones&04)==0){ /*Si la opción -d no está activada*/
                     ComputoTam(opciones, nivel, patron, nombre_nodo);
                 }
-                else{
+                else{ /*Si la opción -d SÍ está activada*/
                     ComputoTam(opciones, nivel-1, patron, nombre_nodo);
                 }
-                //ComputoTam(opciones, nivel, patron, nombre_nodo);
                 if ((opciones&04)==0 || nivel>0){
                     fprintf(stdout,"%ld %s\n", tam_total, nombre_nodo);
                 }
-                tam_total += temp;
-                //!printf("||%ld||\n",tam_total);
+                tam_total += temp; /*El tamaño total se va acumulando a lo largo de todo el recorrido recursivo*/
             }
-            else if (S_ISREG(st.st_mode)){
-                // printf("Quiero acumular con auxiliar.\n");
+            else if (S_ISREG(st.st_mode)){/*Si el nodo es un archivo*/
                 long arch = st.st_size;
-                //!printf("--%ld--\n",arch);
-                tam_total+=arch;
-                //!printf("||%ld||\n",tam_total);
+                tam_total+=arch; /*Guardamos el tamaño del archivo en la variable tam_total*/
                 }
                 }
             }
@@ -120,7 +107,7 @@ if ((opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH)){
     return tam_total;
 }
 
-int parametros(char *cadena){
+int parametros(char *cadena){ //!No entiendo una mierda Raúl
     int menu=0;
     if (strcmp(cadena,"-d")==0) menu = 1;
     else if (strcmp(cadena,"-s")==0) menu = 2;
@@ -135,7 +122,6 @@ int esnumero(char *cadena){
     //implica cortar el metodo si en algun momento el puntero apunta a algo que NO sea un numero
     //con esta comprobacion tambien logramos obtener enteros NO nulos. No tiene sentido explorar p.ej. -2 niveles
     return c=='\0';
-    //! devuelve cero si no es un numero, uno si lo es
 }
 
 int mostrarError(){
@@ -145,7 +131,7 @@ int mostrarError(){
 
 int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por lo que necesito un contador de argumentos y el puntero doble de argumentos
 
-   int flag_opciones = 00;
+   int flag_opciones = 00; //!NO entiendo una mierda Raúl para definir las variables
    char flag_recoger_parametros = 0;
    int nivel = 0;
    char *patron;
@@ -164,7 +150,7 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
         * *  1  1  1 //! IMPOSIBLE
     */
 
-    while(--argc && flag_recoger_parametros!=1){
+    while(--argc && flag_recoger_parametros!=1){ //!NO entiendo una mierda Raúl
         *++argv;
         switch(parametros(*argv)){
             case 1:
@@ -192,23 +178,21 @@ int main(int argc, char **argv){ //Voy a trabajar con la linea de ordenes, por l
             //como el while hace una iteracion mas lo compenso incrementando momentaneamente el contador de argumentos. Alineamos el argc y argv
         }
     }
-    //printf("--%d--\n",flag_opciones);
     if(flag_opciones>05){
         fprintf(stderr,"Has intentado usar -d y -s a la vez, no tiene sentido.\n");
         exit(mostrarError());
     }
-    // fprintf(stdout,"N: %d, P: %s, FLAG: %o",nivel,patron,flag);
-
+    /*Invocamos a la función de calcular tamaño ComputoTam()*/
     if( flag_recoger_parametros != 1 && argc == 0 ){
         fprintf(stdout,"%ld %s\n",ComputoTam(flag_opciones,nivel,patron,getcwd(ruta, MAX_BUFFER)),".");
-        printf("----------------------------------------------------------------------------\n");
-        tam_total=0;
+        fprintf(stdout, "----------------------------------------------------------------------------\n");
+        tam_total=0; /*Reiniciamos tam_total a 0 para evitar acumulaciones incorrectas*/
     }
     else while(argc-->0){
         fprintf(stdout,"%ld %s\n",ComputoTam(flag_opciones,nivel,patron,*argv),*argv);
-        printf("----------------------------------------------------------------------------\n");
+        fprintf(stdout, "----------------------------------------------------------------------------\n");
         *argv++;
-        tam_total=0;
+        tam_total=0; /*Reiniciamos tam_total a 0 para evitar acumulaciones incorrectas*/
     }
     return 0;
 }
