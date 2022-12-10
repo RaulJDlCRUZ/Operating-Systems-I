@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <regex.h>
 
 #define MAX_BUFFER 4096
 long tam_total=0;
@@ -17,10 +18,9 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
     struct dirent *nodo;
     struct stat st;
     char nombre_nodo[MAX_BUFFER + 1]; /* Directorio + "/" + nombre del nodo en el directorio */
-    
-    //if ((opciones&04)>0)printf("-d con nivel %d\n",nivel);
-    //if ((opciones&02)>0)printf("-s\n");
-    //if ((opciones&01)>0)printf("--exclude y patron \"%s\"\n",patron);
+
+    regex_t reegex;
+    int valor_reegex=0;
     
     // printf("%s\n",camino);
 
@@ -34,9 +34,25 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
         fprintf(stderr, "Error en %s\n", camino);
         exit (EXIT_FAILURE);
     }
+        
+    //if ((opciones&04)>0)printf("-d con nivel %d\n",nivel);
+    //if ((opciones&02)>0)printf("-s\n");
+
+    if((opciones&01)>0){//si esta activado el exclude
+        //!!!!! msg como entro al nodo, verifico otra vez si el patron es parte del camino+nodo
+        //!printf("--exclude y patron \"%s\"\n",patron);
+        valor_reegex = regcomp( &reegex, /*este es el patron*/patron, 0);
+        valor_reegex = regexec( &reegex,camino,0, NULL, 0);
+        //ruta del nodo para ver si está contenido el patrón con el que hemos configurado regcomp
+        //!printf("%d\n",valor_reegex);
+    }
+    //(opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH);
+
+if ((opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH)){
     /*Fichero regular?*/
     if (S_ISREG(st.st_mode)){
         //! NO fprintf(stdout,"%s es fichero regular.Bytes: %d\n",camino,st.st_size);
+        printf("entro");
         tam_total+=st.st_size;
         //!printf("||%ld||\n",tam_total);
     /*Directorio?*/
@@ -54,15 +70,6 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
         }
         while ((nodo = readdir(d)) != NULL){
 
-            // if (stat(nombre_nodo, &st) == -1)
-            // {
-            //     fprintf(stderr, "Error en %s\n", nodo->d_name);
-            //     exit(EXIT_FAILURE);
-            // }
-            // printf("%s\n",nombre_nodo);
-            // if (S_ISDIR(st.st_mode))
-            //     ComputoTam(opciones,nivel,patron,/*ruta/directorio_actual*/nombre_nodo);
-
         if (strcmp(nodo->d_name, ".") && strcmp(nodo->d_name, ".."))
         {
             sprintf(nombre_nodo, "%s/%s", camino, nodo->d_name);
@@ -71,7 +78,16 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
                 fprintf(stderr, "Error en %s\n", nodo->d_name);
                 exit(EXIT_FAILURE);
                 }
-            if (S_ISDIR(st.st_mode)){
+
+            if((opciones&01)>0){//si esta activado el exclude
+                //!printf("--exclude y patron \"%s\"\n",patron);
+                valor_reegex = regcomp( &reegex, /*este es el patron*/patron, 0);
+                valor_reegex = regexec( &reegex,nombre_nodo,0, NULL, 0);
+                //ruta del nodo para ver si está contenido el patrón con el que hemos configurado regcomp
+                //!printf("Dentro del nodo: %d\n",valor_reegex);
+                }
+            if ((opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH)) {
+                if (S_ISDIR(st.st_mode)){
                 //printf("Quiero llamar a funcion recursiva.\n");
                 long temp = tam_total;
                 tam_total = 0;
@@ -95,10 +111,12 @@ long ComputoTam(int opciones, int nivel, const char *patron, const char *camino)
                 tam_total+=arch;
                 //!printf("||%ld||\n",tam_total);
                 }
+                }
             }
         }
         closedir(d);
     }
+ }
     return tam_total;
 }
 
