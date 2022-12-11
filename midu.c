@@ -67,7 +67,7 @@ if ((opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH)){
         while ((nodo = readdir(d)) != NULL){
         /* Se saltan los directorios actual y padre */
         if (strcmp(nodo->d_name, ".") && strcmp(nodo->d_name, ".."))
-        {
+        {   //El nodo es demasiado grande?
             if ((strlen(camino)+strlen(nodo->d_name)+2) > sizeof(nombre_nodo)){
                 fprintf(stderr, "Nombre %s/ %s demasiado largo \n" ,camino,nodo->d_name);
                 exit(EXIT_FAILURE);
