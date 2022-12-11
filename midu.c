@@ -68,6 +68,10 @@ if ((opciones&01)==0 || ((opciones&01)>0 && valor_reegex==REG_NOMATCH)){
         /* Se saltan los directorios actual y padre */
         if (strcmp(nodo->d_name, ".") && strcmp(nodo->d_name, ".."))
         {
+            if ((strlen(camino)+strlen(nodo->d_name)+2) > sizeof(nombre_nodo)){
+                fprintf(stderr, "Nombre %s/ %s demasiado largo \n" ,camino,nodo->d_name);
+                exit(EXIT_FAILURE);
+            }
             sprintf(nombre_nodo, "%s/%s", camino, nodo->d_name); //Escribimos EN nombre_nodo el contenido de camino+nodo. No se ve por pantalla
             if (stat(nombre_nodo, &st) == -1){ //El nodo es una ruta valida?
                 fprintf(stderr, "Error en %s\n", nodo->d_name);
