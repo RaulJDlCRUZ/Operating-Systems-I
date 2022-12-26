@@ -154,8 +154,11 @@ La sintaxis para la ejecución del programa padre será:
                                           
 El proceso padre mostrará por la salida estándar los siguientes mensajes:
 1. Cuando se cree un proceso hijo siendo <pid> el identificador del proceso hijo y <archivo> el nombre del archivo a tratar por ese proceso hijo:
+  
                                           Inicio hijo <pid> con <archivo>
-2. Cuando un proceso hijo finalice, siendo <pid> el identificador del proceso hijo:
+
+  2. Cuando un proceso hijo finalice, siendo <pid> el identificador del proceso hijo:
+  
                                           Fin hijo <pid>
 
 El proceso padre debe capturar la señal de interrupción (SIGINT) y, como resultado de ello, enviar una
@@ -163,7 +166,9 @@ señal de terminación (SIGTERM) a todos y cada uno de sus procesos hijos, provo
 ejecución.
 
 Para probar el programa padre se puede usar junto con la siguiente lista de argumentos (indicando su correspondiente directorio de “usuario”):
+  
                                           ./padre /home/usuario/*
+
 Para realizar el programa padre se recomienda encarecidamente realizar los ejercicios del último listado, ver los vídeos subidos en M.Teams, así como las
 transparencias de teoría del Tema 3, en especial, las primitivas fork, exec, wait, waitpid, signal y kill; la teoría y ejemplo prácticos (ejemplo
 “minishell”), la teoría sobre señales y los diferentes ejercicios resueltos en el último listado. Así como cualquier otra fuente de la bibliografía de la
