@@ -131,6 +131,7 @@ El programa con el código fuente se llamará midu.c. Para compilar el programa 
 siguiente mandato:
 
                                     gcc -Wall midu.c -o midu
+
 La opción -Wall permite obtener amplia información sobre el proceso de compilación del programa.
 Este mandato creará el ejecutable midu. También es posible crear un fichero Makefile para
 automatizar el proceso de compilación (Capítulo 4 del Manual de SS.OO. de la Asignatura: “ La
@@ -140,5 +141,32 @@ A continuación, se listan la interfaz de llamadas al sistema que se pueden nece
 desarrollar el proyecto práctico:
 
                     open read write close chdir closedir getcwd opendir readdir stat
+                    
+#########################################
+Última práctica de SSOO, la 3.
+
+programa C estándar denominado padre que cree tantos procesos hijos como argumentos tenga la línea de ordenes el proceso padre.
+Cada proceso hijo, primero, dormirá 10 segundos (uso de función sleep()) y, después, pasará a ejecutar el programa de sistema wc con un argumento de la
+línea de órdenes del proceso padre (el que le corresponde por orden). El proceso padre debe esperar a la finalización de todos sus procesos hijos.
+La sintaxis para la ejecución del programa padre será:
+
+                                          padre [<archivo>]*
+                                          
+El proceso padre mostrará por la salida estándar los siguientes mensajes:
+1. Cuando se cree un proceso hijo siendo <pid> el identificador del proceso hijo y <archivo> el nombre del archivo a tratar por ese proceso hijo:
+                                          Inicio hijo <pid> con <archivo>
+2. Cuando un proceso hijo finalice, siendo <pid> el identificador del proceso hijo:
+                                          Fin hijo <pid>
+
+El proceso padre debe capturar la señal de interrupción (SIGINT) y, como resultado de ello, enviar una
+señal de terminación (SIGTERM) a todos y cada uno de sus procesos hijos, provocando el fin de su
+ejecución.
+
+Para probar el programa padre se puede usar junto con la siguiente lista de argumentos (indicando su correspondiente directorio de “usuario”):
+                                          ./padre /home/usuario/*
+Para realizar el programa padre se recomienda encarecidamente realizar los ejercicios del último listado, ver los vídeos subidos en M.Teams, así como las
+transparencias de teoría del Tema 3, en especial, las primitivas fork, exec, wait, waitpid, signal y kill; la teoría y ejemplo prácticos (ejemplo
+“minishell”), la teoría sobre señales y los diferentes ejercicios resueltos en el último listado. Así como cualquier otra fuente de la bibliografía de la
+asignatura o recurso de Internet.
 
 BY: RAUL JIMENEZ Y PABLO BLAZQUEZ
