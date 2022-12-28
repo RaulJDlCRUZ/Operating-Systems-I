@@ -73,6 +73,12 @@ void padre(int argc, char *argv[]){
             cerrarPadreporError();
         }
     }
+    /*A partir de aquí sólo lo ejecuta el proceso padre. Por ello, hacemos la instalación de la señal de interrupción justo aquí*/
+    if(signal (SIGINT,manejadorSignal) == SIG_ERR) {
+        fprintf(stderr,"Error en la manipulación de la señal.\n" );
+        exit(EXIT_FAILURE);
+    }
+    //Y una vez se ha instalado, ejecutamos un bucle para la espera del padre sobre cada uno de sus hijos
     for (it = 0; it < NUM_HIJOS; it++){
         pid = wait(NULL);
         for (jt = 0; jt < NUM_HIJOS; jt++) if (pid == pids[jt]){
@@ -88,10 +94,6 @@ void main(int argc, char *argv[]){
         exit(EXIT_FAILURE);
     }
     NUM_HIJOS=argc-1;
-    if(signal ( SIGINT , manejadorSignal ) == SIG_ERR) {
-        fprintf(stderr,"Error en la manipulación de la señal.\n" );
-        exit(EXIT_FAILURE);
-    }
     pids = (pid_t*)malloc(NUM_HIJOS /*numero de ficheros o HIJOS. argc-1*/ * sizeof(pid_t)); //Intrucción Memory Allocation. Con ello asigno de manera dinámica un espacio de memoria correcto Sin embargo, como se puede utilizar cualquier espacio de memoria, vamos a inicializar a cero todo el contenido del puntero:
     inicializaracero(pids);
     padre(argc, argv); //Una vez hechos los preparativos, saltamos a la función de creación de procesos
