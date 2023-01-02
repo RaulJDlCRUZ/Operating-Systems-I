@@ -14,13 +14,16 @@
 #include <signal.h>
 #include <unistd.h>
 
-pid_t *pids;
-int NUM_HIJOS = 0;
+pid_t *pids; //Puntero de tipo pid_t que almacenará los pid de cada uno de los Hijos
+int NUM_HIJOS = 0; //Variable de tipo entera que almacena el número total de Hijos
 
-void inicializaracero(pid_t *pids){
+void inicializaracero(pid_t *pids){ //Inicializa a 0 la zona de memoria reservada para los pids
     for(int i = 0; i < NUM_HIJOS; i++) pids[i] = 0;
 }
 
+/*
+Recorre la tabla donde se almacenan todos los pids, entonces para cada hijo (pid no nulo) se procederá a enviar una señal de terminación al proceso con dicho pid. Si se produjera un error al enviar dicha señal, el programa se cierra con un código de error y se libera la memoria reservada a la tabla de pids. En caso contrario, reemplazamos dicho elemento de la tabla por un 0.
+*/
 void matarProcesos(){
     for (int kt = 0; kt < NUM_HIJOS; kt++){
         if(pids[kt]!=0){
@@ -34,19 +37,26 @@ void matarProcesos(){
     }
 }
 
-void manejadorSignal(int signal){
+void manejadorSignal(int signal){ //Si le llega la señal de interrupción, CTRL+C, se proceden a matar todos los procesos hijos, liberar la zona de memoria reservada para los pids y a finalizar el programa
     matarProcesos();
     fprintf(stdout,"[Padre finaliza por señal de interrupcion]\n");
     free(pids);
     exit(EXIT_SUCCESS);
 }
 
-void cerrarPadreporError(){ //Cuando se está ejecutando el método padre tenemos un error, declaramos este método para evitar repetir instrucciones. Simplemente se llama al método de matar los procesos hijos. liberación de memoria dinámica y salir con código de error.
+/*
+Cuando se está ejecutando el método padre tenemos un error, declaramos este método para evitar repetir instrucciones. Simplemente se llama al método de matar los procesos hijos. liberación de memoria dinámica y salir con código de error.
+*/
+void cerrarPadreporError(){
     matarProcesos();
     free(pids);
     exit (EXIT_FAILURE);
 }
 
+/*
+Se crearán distintos procesos hijos, uno para cada archivo regular válido para que se ejecute el comando wc con la opción -c. Para ello, a través de un for vamos a recorrer tanto la línea de órdenes como la zona de memoria reservada para almacenar los pids, así pues, lo primero que se comprueba es que los archivos que se escriban por terminal sean válidos. Después, se crea un switch para que se distinga la ejecución de los procesos padre y de sus hijos (la creación de dichos procesos se realiza en la misma sentencia del switch). Usmos un switch dado que fork devuelve unvalor distinto en función del proceso: al proceso padre se le devuelve el pid del proceso hijo y al proceso hijo se le devuelve un 0.
+Entonces, los procesos hijos harán eventualmente el wc -c con el archivo correspondiente en función de la iteración del bucle for. El padre se sale del switch y esperará a que terminen los procesos hijos de ejecutarse para poder finalizarlos.
+*/
 void padre(int argc, char *argv[]){
     int it,jt;
     pid_t pid;
@@ -88,6 +98,10 @@ void padre(int argc, char *argv[]){
     }
 }
 
+/*
+El metodo principal se encarga de controlar que el número de argumentos introducidos en la línea de ordenes sea el correcto. De ser así, asignamos el número de hijos a la variable entera NUM_HIJOS para poder la asignación dinámica de memoria y su inicialización a 0. Será entonces cuando podemos saltar al método padre.
+Cuando este acabe se libera la memoria dinámica y se finaliza el programa.
+*/
 void main(int argc, char *argv[]){
     if(argc <= 1){
         fprintf(stderr,"Error en número de argumentos. Modo de empleo: padre [<archivo>]*\n");
