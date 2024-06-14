@@ -47,6 +47,8 @@ ps2pdf bash.ps
 > Análogamente deberá hacerlo para la página de manual referente al comando `du`.
 <!-- Para las dudas sobre este proyecto práctico, podéis poneros en contacto con el profesor de la asignatura bien vía Campus Virtual o en el correo Ivan.GDiaz@uclm.es para solicitar tutorías. -->
 
+[**Algunos recursos que se han empleado para su implementación se pueden encontrar aquí**](/Ejercicios%20en%20BASH/Otros%20recursos/)
+
 ## Práctica 2
 
 Se trata de desarrollar un programa en C que proporcione un funcionamiento similar al mandato `du` de UNIX, el cual se denominará `midu`. A continuación, se describe los requisitos funcionales de este script:
