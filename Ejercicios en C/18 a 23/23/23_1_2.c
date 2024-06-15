@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     {
         for (; i < argc; i++)
         { /* Recorrido por la lista de archivos */
-            if ((fp = fopen(argv[i]), "r") == NULL)
+            if ((fp = fopen(argv[i], "r")) == NULL)
             {
                 fprintf(stderr, "Error: No puedo abrir %s\n", *argv);
                 return EXIT_FAILURE; /* Código estándar de fallo definido en stdlib.h */

@@ -134,7 +134,7 @@ voidEscribirArchivo(const char *nombre, int desp, int numBytes)
     } /* Fin bucle lectura/escritura */
     close(fd); /* Cierre de archivo */
 }
-int main(intargc, char *argv[])
+int main(int argc, char *argv[])
 {
     int desp;  /* Desplazamiento desde el origen */
     int bytes; /* Número de bytes a copiar */
@@ -294,7 +294,7 @@ void Enlazar(const char *objetivo, const char *nodo, int soft, int forzar)
 }
 
 /* Función principal */
-int main(intargc, char *argv[])
+int main(int argc, char *argv[])
 {
 
     char nodo[PATH_MAX + 1]; /* Nombre nuevo del nodo */
@@ -319,7 +319,7 @@ int main(intargc, char *argv[])
                 break;
             default:
                 fprintf(stderr, "Opción ilegal %c\n", c);
-                exit(EXIT_FAILURE);
+                return EXIT_FAILURE;
                 break;
             }
 
@@ -360,7 +360,7 @@ int main(intargc, char *argv[])
                 if (flag_f == 0)
                 {
                     fprintf(stderr, "El nodo %s ya existe\n", *argv);
-                    exit(EXIT_FAILURE);
+                    return EXIT_FAILURE;
                 }
             }
         }
@@ -399,7 +399,7 @@ int main(intargc, char *argv[])
         } /* Fin del bucle */
         break;
     }
-    return EXIT_SUCESS;
+    return EXIT_SUCCESS;
 }
 ```
 
@@ -413,8 +413,15 @@ int main(intargc, char *argv[])
 > Se aconseja consultar las páginas del manual correspondientes a las llamadas al sistema `opendir`, `readdir` y `closedir`
 
 ```c
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 /* ListarDirectorio: Imprime en la salida estándar el nombre los nodos almacenados en el directorio "dir" */
-voidListarDirectorio(constchar *dir)
+voidListarDirectorio(const char *dir)
 {
     DIR *d; /* Manejador del directorio */
     struct dirent *nodo;
@@ -633,7 +640,7 @@ int main(int argc, char *argv[])
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(intargc, char *argv[])
+int main(int argc, char *argv[])
 {
     unsigned int permisos; /*Permisos en formato numérico */
 

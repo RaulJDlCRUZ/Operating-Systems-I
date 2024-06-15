@@ -55,7 +55,7 @@ voidEscribirArchivo(const char *nombre, int desp, int numBytes)
     } /* Fin bucle lectura/escritura */
     close(fd); /* Cierre de archivo */
 }
-int main(intargc, char *argv[])
+int main(int argc, char *argv[])
 {
     int desp;  /* Desplazamiento desde el origen */
     int bytes; /* Número de bytes a copiar */

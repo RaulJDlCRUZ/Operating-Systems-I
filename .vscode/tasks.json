@@ -1,0 +1,30 @@
+{
+"version": "2.0.0",
+"tasks": [
+    {
+        "label": "Analizar C",
+        "type": "shell",
+        "command": "gcc",
+        "args": [
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "/dev/null",
+            "${workspaceFolder}/**/*.c"
+        ],
+        "group": "build",
+        "problemMatcher": ["$gcc"]
+    },
+    {
+        "label": "Analizar Bash",
+        "type": "shell",
+        "command": "shellcheck",
+        "args": [
+            "${workspaceFolder}/**/*.sh"
+        ],
+        "group": "build",
+        "problemMatcher": ["$shellcheck"]
+    }
+]
+}

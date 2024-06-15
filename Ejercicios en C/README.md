@@ -405,7 +405,8 @@ int *vg2;
 void function1(void)
 {
     int i;
-    int x = 1, y = 2, z[3] : int * ip;
+    int x = 1, y = 2, z[3];
+    int *ip;
 
     ip = &x;
     y = *ip;
@@ -415,13 +416,13 @@ void function1(void)
         *ip++ = i;
 
     printf("\nVARIABLES DE function1\n");
-    printf("    i - Dirección: %p - Valor: %d\n", (void *)&i, i);
-    printf("    x - Dirección: %p - Valor: %d\n", (void *)&x, x);
-    printf("    y - Dirección: %p - Valor: %d\n", (void *)&y, y);
+    printf("    i - Direccion: %p - Valor: %d\n", (void *)&i, i);
+    printf("    x - Direccion: %p - Valor: %d\n", (void *)&x, x);
+    printf("    y - Direccion: %p - Valor: %d\n", (void *)&y, y);
 
     for (i = 0; i < 3; i++)
-        printf(" z[0] - Dirección: %p - Valor: %d\n", i, (void *)&z[i], z[i]);
-    printf("   ip - Dirección: %p - Valor: %p\n", (void *)&ip, (void *)ip);
+        printf("    z[%d] - Direccion: %p - Valor: %d\n", i, (void *)&z[i], z[i]);
+    printf("    ip - Direccion: %p - Valor: %p\n", (void *)&ip, (void *)ip);
 }
 
 void function2(void)
@@ -429,7 +430,7 @@ void function2(void)
     int vf2;
 
     printf("\nVARIABLES DE function2\n");
-    printf("vf2 - Dirección: %p - Valor: %d\n", (void *)&vf2, vf2);
+    printf("vf2 - Direccion: %p - Valor: %d\n", (void *)&vf2, vf2);
 }
 
 int main()
@@ -437,16 +438,16 @@ int main()
     int vm1;
 
     printf("VARIABLES GLOBALES\n");
-    printf("vg1 - Dirección: %p - Valor: %d\n", (void *)&vg1, vg1);
-    printf("vg2 - Dirección: %p - Valor: %p\n", (void *)&vg2, (void *)vg2);
+    printf("vg1 - Direccion: %p - Valor: %d\n", (void *)&vg1, vg1);
+    printf("vg2 - Direccion: %p - Valor: %p\n", (void *)&vg2, (void *)vg2);
 
     printf("\nVARIABLES DE main\n");
-    printf("vm1 - Dirección: %p - Valor: %d\n", (void *)&vm1, vm1);
+    printf("vm1 - Direccion: %p - Valor: %d\n", (void *)&vm1, vm1);
 
     printf("\nFUNCIONES\n");
-    printf("function1 - Dirección: %p\n", (void *)function1);
-    printf("function2 - Dirección: %p\n", (void *)function2);
-    printf("    main - Dirección: %p\n", (void *)main);
+    printf("function1 - Direccion: %p\n", (void *)function1);
+    printf("function2 - Direccion: %p\n", (void *)function2);
+    printf("    main - Direccion: %p\n", (void *)main);
 
     function1();
     function2();
@@ -604,7 +605,7 @@ int main(int argc, char *argv[])
 
     for (i = 1; i < argc; i++)
     {
-        printf("%s%s", argv[i], (i < argc − 1) ? " " : "");
+        printf("%s%s", argv[i], (i < argc - 1) ? " " : "");
     }
     printf("\n");
     return 0;
@@ -847,7 +848,7 @@ int main(int argc, char *argv[])
 
 **Mostrando versión 2, todas las versiones se encuentran [aquí](./18%20a%2023/23/)**
 ```c
-/* Versión 1.1 - Sin procesamiento de la línea de órdenes */
+/* Versión 2 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -908,8 +909,8 @@ int main(int argc, char *argv[])
             default:
                 if (isdigit(c))
                 {
-                    opcion_n = atoi(argv[0])
-                        argv[0] += strlen(argv[0]) - 1; /* Fin del argumento */
+                    opcion_n = atoi(argv[0]);
+                    argv[0] += strlen(argv[0]) - 1; /* Fin del argumento */
                     if (opcion_n < 1)
                     {
                         fprintf(stderr, "Error: opción ilegal -%s\n", argv[0]);

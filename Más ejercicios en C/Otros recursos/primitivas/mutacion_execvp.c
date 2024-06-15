@@ -28,7 +28,7 @@ pid_t spawnChild(const char *program, char **arg_list)
 
 int main(void)
 {
-    // int ret;
+    int ret;
     const char *args[] = {"top", NULL};
 
     pid_t child;

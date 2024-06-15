@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(intargc, char *argv[])
+int main(int argc, char *argv[])
 {
     unsigned int permisos; /*Permisos en formato numérico */
 

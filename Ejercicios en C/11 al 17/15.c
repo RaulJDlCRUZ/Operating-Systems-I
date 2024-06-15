@@ -6,7 +6,8 @@ int *vg2;
 void function1(void)
 {
     int i;
-    int x = 1, y = 2, z[3] : int * ip;
+    int x = 1, y = 2, z[3];
+    int *ip;
 
     ip = &x;
     y = *ip;

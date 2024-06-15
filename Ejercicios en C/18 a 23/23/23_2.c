@@ -1,4 +1,4 @@
-/* Versión 1.1 - Sin procesamiento de la línea de órdenes */
+/* Versión 2 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -59,8 +59,8 @@ int main(int argc, char *argv[])
             default:
                 if (isdigit(c))
                 {
-                    opcion_n = atoi(argv[0])
-                        argv[0] += strlen(argv[0]) - 1; /* Fin del argumento */
+                    opcion_n = atoi(argv[0]);
+                    argv[0] += strlen(argv[0]) - 1; /* Fin del argumento */
                     if (opcion_n < 1)
                     {
                         fprintf(stderr, "Error: opción ilegal -%s\n", argv[0]);

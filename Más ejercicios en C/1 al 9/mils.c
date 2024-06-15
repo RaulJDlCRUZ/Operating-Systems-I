@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 /* ListarDirectorio: Imprime en la salida estándar el nombre los nodos almacenados en el directorio "dir" */
-voidListarDirectorio(constchar *dir)
+voidListarDirectorio(const char *dir)
 {
     DIR *d; /* Manejador del directorio */
     struct dirent *nodo;

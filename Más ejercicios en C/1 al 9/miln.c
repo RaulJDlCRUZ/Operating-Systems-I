@@ -45,7 +45,7 @@ void Enlazar(const char *objetivo, const char *nodo, int soft, int forzar)
 }
 
 /* Función principal */
-int main(intargc, char *argv[])
+int main(int argc, char *argv[])
 {
 
     char nodo[PATH_MAX + 1]; /* Nombre nuevo del nodo */
@@ -70,7 +70,7 @@ int main(intargc, char *argv[])
                 break;
             default:
                 fprintf(stderr, "Opción ilegal %c\n", c);
-                exit(EXIT_FAILURE);
+                return EXIT_FAILURE;
                 break;
             }
 
@@ -111,7 +111,7 @@ int main(intargc, char *argv[])
                 if (flag_f == 0)
                 {
                     fprintf(stderr, "El nodo %s ya existe\n", *argv);
-                    exit(EXIT_FAILURE);
+                    return EXIT_FAILURE;
                 }
             }
         }
@@ -150,5 +150,5 @@ int main(intargc, char *argv[])
         } /* Fin del bucle */
         break;
     }
-    return EXIT_SUCESS;
+    return EXIT_SUCCESS;
 }
