@@ -14,6 +14,6 @@
 
 ## Práctica 3: Gestión de procesos
 
-### Más ejercicios en C
+### [Más ejercicios en C](/Más%20ejercicios%20en%20C/README.md)
 
-### Práctica evaluable
+### [Práctica evaluable](/Prácticas%20de%20Laboratorio/P3/padre.c)
