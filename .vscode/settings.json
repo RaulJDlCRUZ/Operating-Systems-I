@@ -21,6 +21,7 @@
     "peacock.color": "#215732",
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
-        "definitions.h": "c"
+        "definitions.h": "c",
+        "signal.h": "c"
     }
 }
