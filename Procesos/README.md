@@ -443,3 +443,268 @@ intmain(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 ```
+
+9\. Construir un programa llamado `consumidor` que copie en la salida estándar el contenido de una tubería cuyo nombre recibe como argumento.
+----
+- La sintaxis es:
+    ```console
+    consumidor <nombre de la tubería>
+    ```
+- El programa debe continuar esperando datos de la tubería aunque haya leído un fin de archivo
+- Crear en el directorio de trabajo actual una tubería con nombre **`ejemplopipe`** mediante el programa de sistema `mkfifo`.
+- Probar la ejecución del programa consumidor y escribir con otro programa en la tubería (por ejemplo, con el programa de sistema `cat`)
+- Compruebe que el programa consumidor sigue leyendo datos en sucesivas ejecuciones de los programas que escriben en la tubería
+- También compruebe que si el programa consumidor termina y los otros programas siguen escribiendo en la tubería, en la siguiente ejecución del programa consumidor se obtienen todos los datos escritos
+- El programa debe minimizar el tiempo del procesador invertido en los bucles de espera
+> Se aconseja consultar las páginas del manual correspondientes a las llamadas al sistema `open`, `read`, `write` y `sleep`
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#define ESPERA 1      /* Segundos de espera en lectura de EOF en la tubería */
+#define MAXBUFFER 256 /* Tamaño del buffer de lectura/escritura */
+
+int main(int argc, char *argv[])
+{
+    char buffer[MAXBUFFER]; /* Buffer de lectura/escritura */
+    int fd;                 /* Descriptor asociado a la tubería */
+    int n;
+
+    /* Tratamiento de la línea de órdenes */
+    if (argc != 2)
+    {
+        fprintf(stderr, "Error en el número de argumentos\n");
+        return EXIT_FAILURE;
+    }
+
+    /* Apertura de la tubería con nombre */
+    if ((fd = open(argv[1], O_RDONLY)) == -1)
+    {
+        fprintf(stderr, "Error de apertura de la tubería\n");
+        return EXIT_FAILURE;
+    }
+    /*
+    Bucle infinito de lectura de la tubería y escritura en salida estándar.
+    El bucle infinito se consigue con la condición while (n==0) que se recibe cuando
+    algún proceso escritor de la tubería cierra su descriptor
+    */
+    while ((n = read(fd, buffer, sizeof(buffer))) >= 0)
+    {
+        if (n == 0)
+            sleep(ESPERA); /* Minimiza el uso de CPU en lectura EOF */
+        else if (write(1, buffer, n) != n)
+        { /* Escritura en la salida estándar */
+            fprintf(stderr, "Errordeescritura\n");
+            return EXIT_FAILURE;
+        }
+    }
+    fprintf(stderr, "Errordelecturaenlatubería\n");
+    return EXIT_FAILURE;
+}
+```
+
+10\. Construir un programa llamado `mimkfifo` que cree una tubería con nombre.
+----
+- La sintaxis es:
+    ```console
+    mimkfifo <permisos en octal> <nombre de la tubería>
+    ```
+- Probar la ejecución del programa anterior creando la tubería con mimkfifo.
+
+> Se aconseja consultar las páginas del manual correspondientes a la llamada al sistema `mkfifo` y a la función de la biblioteca estándar `sscanf`
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+intmain(int argc, char *argv[])
+{
+    unsigned int permisos;
+
+    /* Tratamiento de la línea de órdenes */
+    if (argc != 3)
+    {
+        fprintf(stderr, "Error en el número de argumentos\n");
+        return EXIT_FAILURE;
+    }
+    /* Conversión a entero en octal de los permisos almacenados en argv[1] */
+    if (sscanf(argv[1], "%o", &permisos) != 1)
+    {
+        fprintf(stderr, "Error en el argumento de permisos\n");
+        return EXIT_FAILURE;
+    }
+    /* Creación de la tubería con nombre */
+    if (mkfifo(argv[2], permisos) != 0)
+    {
+        fprintf(stderr, "Error en creación de la tubería\n");
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
+}
+```
+
+11\. Construir un programa denominado `padre` que cree un número determinado (definido en una constante) de procesos que ejecuten un código de programa denominado `hijo`.
+----
+- La sintaxis es:
+    ```console
+    padre <número máximo segundos>
+    hijo <número máximo segundos>
+    ```
+- El código del programa `hijo` hará que cada proceso hijo duerma un número aleatorio de segundos entre 1 y un número máximo y, justo a continuación, finalizará.
+- El número máximo de segundos será indicado por el programa padre a la hora de asignar un nuevo segmento de código a cada proceso hijo mediante la primitiva `execl`
+    - Queda a responsabilidad de cada proceso hijo generar un número aleatorio (entre 1 y ese número máximo) que utilizará en la llamada a la primitiva `sleep` para dormir
+- El proceso padre mostrará por la salida estándar dos mensajes:
+    1. Antes de finalizar el proceso:
+        ```console
+        [Proceso padre] finaliza
+        ```
+    2. Cuando el proceso `padre` conoce que un proceso `hijo` ha terminado siendo _&lt;pid&gt;_ el identificador del proceso hijo finalizado:
+        ```console
+        [Proceso padre] el proceso <pid> ha terminado
+        ```
+- Asimismo el proceso `padre` puede finalizar su ejecución si el usuario pulsa la combinación de teclas &lt;Ctrl+C&gt;. En este caso, el proceso padre debe forzar la terminación de los procesos hijos vivos mediante la señal `SIGINT`.
+- Cada proceso hijo mostrará por la salida estándar los dos mensajes siguientes, siendo _&lt;pid&gt;_ su identificador de proceso y &lt;n&gt; el nº de segundos que el proceso hijo va a dormir:
+    1. Antes de dormir:
+    ```console
+    [Proceso <pid>] duerme <n> segundos
+    ```
+    2. Antes de finalizar el proceso:
+    ```console
+    [Proceso <pid>] finaliza
+    ```
+
+> Se aconseja consultar las páginas del manual correspondientes a las llamadas al sistema `fork`, `execl`, `getpid`, `wait` y/o `waitpid` , `signal`, `kill` y `sleep` y a las funciones de la biblioteca estándar `srand` y `rand`.
+
+**`hijo.c`**
+
+```c
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+int main(int argc, char *argv[])
+{
+    int seg_espera; /* Segundos a esperar durmiendo */
+    int seg_maximo; /* Nº máximo de segundos a dormir */
+
+    /* Tratamiento de la línea de órdenes */
+    if (argc != 2)
+    {
+        fprintf(stderr, "Error en el número de argumentos\n");
+        return EXIT_FAILURE;
+    }
+    if ((seg_maximo = atoi(argv[1])) <= 0)
+    {
+        fprintf(stderr, "Error en el argumento de segundos\n");
+        return EXIT_FAILURE;
+    }
+
+    /* Espera un nº de segundos aleatorio y finaliza */
+    srand((int)getpid()); /* Inicializa la secuencia aleatoria */
+    seg_espera = 1 + (rand() % seg_maximo);
+    printf("[Proceso %d] duerme %d segundos\n", getpid(), seg_espera);
+    sleep(seg_espera);
+    printf("[Proceso %d] finaliza\n", getpid());
+    return EXIT_SUCCESS;
+}
+```
+
+**`padre.c`**
+
+```c
+#define _POSIX_SOURCE /* Elimina el warning en declaración de kill() */
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <signal.h>
+#include <wait.h>
+
+#define NUM_HIJOS 5       /* Nºde procesos hijos a crear */
+#define NOMBREHIJO "hijo" /* Nombre del programa hijo */
+
+void FinalizarProcesos();
+void Manejador(int num);
+
+pid_t pids[NUM_HIJOS]; /* Tabla de procesos hijos */
+
+int main(int argc, char *argv[])
+{
+    int i, j;
+    int pid;
+
+    /* Tratamiento de la línea de órdenes */
+    if (argc != 2)
+    {
+        fprintf(stderr, "Error en el número de argumentos\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Tratamiento de la señal */
+    if (signal(SIGINT, Manejador) == SIG_ERR)
+    {
+        fprintf(stderr, "Error en la manipulación de la señal\n");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Creación de los procesos hijos */
+    for (i = 0; i < NUM_HIJOS; i++)
+        switch (pids[i] = fork())
+        { /* Se guarda el pid en la tabla de procesos */
+        case -1:
+            fprintf(stderr, "Error en la creación del proceso hijo\n");
+            FinalizarProcesos();
+            break;
+        case 0:
+            if (execl(NOMBREHIJO, NOMBREHIJO, argv[1], NULL) == -1)
+            {
+                fprintf(stderr, "Error en la ejecución del proceso hijo\n");
+                exit(EXIT_FAILURE);
+            }
+            break;
+        }
+    /* Espera a la finalización de los procesos hijos */
+    for (i = 0; i < NUM_HIJOS; i++)
+    {
+        pid = wait(NULL);
+        for (j = 0; j < NUM_HIJOS; j++)
+        {
+            if (pid == pids[j])
+            {
+                printf("[Proceso padre] el proceso %d ha terminado\n", pid);
+                pids[j] = 0; /* 0 para indicar que no existe el proceso */
+            }
+        }
+    }
+    printf("[Procesopadre] finaliza\n");
+    return EXIT_SUCCESS;
+}
+
+/* FianlizarProcesos: Termina todos los procesos hijos vivos */
+void FinalizarProcesos(void)
+{
+    int i;
+
+    for (i = 0; i < NUM_HIJOS; i++)
+        if (pids[i] != 0)
+        { /* Sólo se mata los procesos hijos vivos */
+            if (kill(pids[i], SIGINT) == -1)
+            {
+                fprintf(stderr, "Error al enviar una señal\n");
+            }
+        }
+}
+
+/* Manejador: Manejador de la señal */
+void Manejador(int num)
+{
+    FinalizarProcesos();
+    printf("[Proceso padre] finaliza\n");
+    exit(EXIT_SUCCESS);
+}
+```
